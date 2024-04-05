@@ -50,7 +50,7 @@ workflow BIgMAGFlow {
                     gunc_ch = []
                 }
 		
-                quast_ch = QUAST(files_ch, params.max_ref_number, empty_bins_ch).collect()
+                quast_ch = QUAST(files_ch, empty_bins_ch).collect()
 
 		// Final processing of the outputs
                 concat_dfs_ch = CONCAT_DFS(files_ch, checkm2_ch, busco_ch, gunc_ch, quast_ch, gtdbtk2_ch).collect()		
