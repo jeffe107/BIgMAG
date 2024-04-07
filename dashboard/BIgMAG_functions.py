@@ -43,9 +43,12 @@ def get_gtdbtk_results(data_df):
             temp_df = temp_df.drop_duplicates(subset=['classification'])
             temp_df = temp_df.reset_index()
             extract = pd.Series(temp_df['classification'], index=None)
-
+            
             for i in range(len(extract)):
-                extract[i] = ';' + extract[i]
+                if pd.notna(extract[i]): 
+                    extract[i] = ';' + extract[i]
+                else:
+                    extract[i] = 'NaN'
 
             string = ''
             my_list = []
@@ -53,7 +56,7 @@ def get_gtdbtk_results(data_df):
             df = pd.DataFrame(columns=column_names)
             
             for i in extract:
-                if i != ';Unclassified Bacteria' and i != ';Unclassified' and i != ';Unclassified Archaea':
+                if i != ';Unclassified Bacteria' and i != ';Unclassified' and i != ';Unclassified Archaea' and i != 'NaN':
                     for j in reversed(range(len(i))):
                         if i[j] != ';':
                             string += i[j]
@@ -87,9 +90,12 @@ def get_gtdbtk_results(data_df):
 def extract_genus(pd_series, tax_level):
     data = pd.Series()
     extract = pd_series
-    
+
     for i in range(len(extract)):
-        data = pd.concat([data, pd.Series(';' + extract[i])])
+        if pd.notna(extract[i]): 
+            data = pd.concat([data, pd.Series(';' + extract[i])])
+        else:
+            data = pd.concat([data, pd.Series('NaN')])
         
     data = data.reset_index(drop=True)
 
@@ -107,7 +113,7 @@ def extract_genus(pd_series, tax_level):
     df = pd.DataFrame(columns=column_names)
     
     for i in data:
-        if i != ';Unclassified Bacteria' and i != ';Unclassified' and i != ';Unclassified Archaea':
+        if i != ';Unclassified Bacteria' and i != ';Unclassified' and i != ';Unclassified Archaea' and i != 'NaN':
             for j in reversed(range(len(i))):
                 if i[j] != ';':
                     string += i[j]

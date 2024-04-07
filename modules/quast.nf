@@ -2,7 +2,7 @@ process QUAST {
 	tag "$sample"
 
 	conda "bioconda::quast=5.2.0"
-	container "${ params.use_singularity == 'yes' ?
+	container "${ params.use_singularity ?
             'https://depot.galaxyproject.org/singularity/quast:5.2.0--py38pl5321h5cf8b27_3' :
             'quay.io/biocontainers/quast:5.2.0--py38pl5321h5cf8b27_3' }"
 

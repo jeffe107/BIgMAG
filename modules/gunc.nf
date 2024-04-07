@@ -3,7 +3,7 @@ process GUNC {
 	errorStrategy 'ignore'
 
 	conda "bioconda::gunc=1.0.6"
-	container "${ params.use_singularity == 'yes' ?
+	container "${ params.use_singularity ?
             'https://depot.galaxyproject.org/singularity/gunc:1.0.6--pyhdfd78af_0' :
             'quay.io/biocontainers/gunc:1.0.6--pyhdfd78af_0' }"
 	containerOptions "${ params.directory_to_bind == null ? '' : "--bind ${params.directory_to_bind}" }"

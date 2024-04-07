@@ -8,49 +8,61 @@ files = sys.argv[1]
 sample = sys.argv[2]
 outdir = sys.argv[3]
 
+#Creating BUSCO df
+path_busco = f"{files}/busco/batch_summary.txt"
+if  os.path.isfile(path_busco):
+     df_busco = pd.read_csv(path_busco, sep='\t')
+     df_busco['Input_file'] = df_busco['Input_file'].apply(lambda x: x.split('.')[0])
+else:
+     df_busco = pd.DataFrame({'Input_file': ['empty_df']})
+
+#Creating CheckM2 df
 path_checkm2 = f"{files}/checkm2/quality_report.tsv"
 if  os.path.isfile(path_checkm2):
-     df_checkm2 = pd.read_table(f"{files}/checkm2/quality_report.tsv", sep="\t").sort_values(['Name'])
-     df_checkm2 = df_checkm2.reset_index(drop=True)
+     df_checkm2 = pd.read_csv(path_checkm2, sep='\t')
 else:
-     df_checkm2 = pd.DataFrame()
+     df_checkm2 = pd.DataFrame({'Name': ['empty_df']})
 
+#Creating GUNC df
 path_gunc = f"{files}/gunc/GUNC.progenomes_2.1.maxCSS_level.tsv"
 if os.path.isfile(path_gunc):
-    df_gunc = pd.read_table(f"{files}/gunc/GUNC.progenomes_2.1.maxCSS_level.tsv", sep="\t").sort_values(['genome'])
-    df_gunc = df_gunc.drop(columns=['genome'])
-    df_gunc = df_gunc.reset_index(drop=True)
+    df_gunc = pd.read_csv(path_gunc, sep='\t')
 else:
-    df_gunc = pd.DataFrame()
+    df_gunc = pd.DataFrame({'genome': ['empty_df']})
 
+#Creating and concatenating GTDB-Tk2 dfs
 df_gtdbtk2 = pd.DataFrame()
 path_gtdbtk2_bac = f"{files}/gtdbtk2/gtdbtk.bac120.summary.tsv"
 if os.path.isfile(path_gtdbtk2_bac):
-    df_gtdbtk2_bac = pd.read_table(f"{files}/gtdbtk2/gtdbtk.bac120.summary.tsv")
-    df_gtdbtk2 = pd.concat([df_gtdbtk2, df_gtdbtk2_bac], axis=0)
+    df_gtdbtk2_bac = pd.read_csv(path_gtdbtk2_bac, sep='\t')
+    df_gtdbtk2 = pd.concat([df_gtdbtk2, df_gtdbtk2_bac], axis=0, ignore_index=True)
 
 path_gtdbtk2_ar = f"{files}/gtdbtk2/gtdbtk.ar53.summary.tsv"
 if os.path.isfile(path_gtdbtk2_ar):
-    df_gtdbtk2_ar = pd.read_csv(path_gtdbtk2_ar, sep="\t")
-    df_gtdbtk2 = pd.concat([df_gtdbtk2, df_gtdbtk2_ar], axis=0)
+    df_gtdbtk2_ar = pd.read_csv(path_gtdbtk2_ar, sep='\t')
+    df_gtdbtk2 = pd.concat([df_gtdbtk2, df_gtdbtk2_ar], axis=0, ignore_index=True)
 
-if len(df_gtdbtk2) > 0:
-    df_gtdbtk2 = df_gtdbtk2_bac.sort_values(['user_genome'])
-    df_gtdbtk2 = df_gtdbtk2_bac.drop(columns=['user_genome'])
-    df_gtdbtk2 = df_gtdbtk2_bac.reset_index(drop=True)
+if len(df_gtdbtk2) == 0:
+	df_gtdbtk2 = pd.DataFrame({'user_genome': ['empty_df']})
 
-df_busco = pd.read_table(f"{files}/busco/batch_summary.txt", sep="\t").sort_values(['Input_file'])
-df_busco = df_busco.drop(columns=['Input_file'])
-df_busco = df_busco.reset_index(drop=True)
+#Creating QUAST df
+path_quast = f"{files}/quast/transposed_report.tsv"
+df_quast = pd.read_csv(path_quast, sep='\t')
 
-df_quast = pd.read_table(f"{files}/quast/transposed_report.tsv", sep="\t").sort_values(['Assembly'])
-df_quast = df_quast.drop(columns=['Assembly'])
+#Merging dfs, QUAST df is used as base df, if QUAST fails, this script is going to fail
+df_list = [df_busco, df_checkm2, df_gtdbtk2, df_gunc]
+column_names = ['Input_file', 'Name', 'user_genome', 'genome']
+for i in range(len(df_list)):
+    df_quast = pd.merge(df_quast, df_list[i], left_on='Assembly', right_on=column_names[i], how='left')
+
+df_quast = df_quast.drop(columns=column_names)
+df_quast = df_quast.sort_values(['Assembly'])
 df_quast = df_quast.reset_index(drop=True)
 
-df_concat = pd.concat([df_checkm2,df_busco,df_gunc,df_gtdbtk2, df_quast], axis=1)
+#Exporting the file
+df_concat = df_quast
 df_concat['sample'] = [sample] * len(df_concat)
 df_concat.to_csv(f"{files}/dfs_concat/dfs.tsv", sep="\t")
-
 file_path = f"{outdir}/paths.txt"
 paths = open(file_path, "a")
 paths.write(f"{files}/dfs_concat/dfs.tsv" + '\n')

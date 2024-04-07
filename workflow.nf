@@ -16,6 +16,7 @@ include { FINAL_DF              }	from './modules/final_df.nf'
 include { GTDBTK2               }	from './modules/gtdbtk2.nf'
 include { GUNC			}	from './modules/gunc.nf'
 include { QUAST                 }       from './modules/quast.nf'
+include { REMOVE_TMP            }       from './modules/remove_tmp.nf'
 
 /*
  * workflow
@@ -54,5 +55,6 @@ workflow BIgMAGFlow {
 
 		// Final processing of the outputs
                 concat_dfs_ch = CONCAT_DFS(files_ch, checkm2_ch, busco_ch, gunc_ch, quast_ch, gtdbtk2_ch).collect()		
-                FINAL_DF(concat_dfs_ch)
+                final_df_ch = FINAL_DF(concat_dfs_ch)
+                REMOVE_TMP(files_ch, final_df_ch)
 }

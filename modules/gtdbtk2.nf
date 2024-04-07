@@ -2,7 +2,7 @@ process GTDBTK2 {
 	tag "$sample"
 
 	conda "bioconda::gtdbtk=2.3.2"
-        container "${ params.use_singularity == 'yes' ?
+        container "${ params.use_singularity ?
             'https://depot.galaxyproject.org/singularity/gtdbtk:2.3.2--pyhdfd78af_0' :
             'quay.io/biocontainers/gtdbtk:2.3.2--pyhdfd78af_0' }"
 	containerOptions "${ params.directory_to_bind == null ? '' : "--bind ${params.directory_to_bind}" }"

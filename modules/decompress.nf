@@ -1,6 +1,5 @@
 process DECOMPRESS {
 	tag "$sample"
-	publishDir "${params.outdir}/$sample", mode:'copy'
 
 	input:
 	tuple val(sample), path(files)

@@ -31,8 +31,7 @@ def read_data():
 app = Dash(__name__, external_stylesheets=[dbc.themes.CERULEAN])
 app.title = "BIgMAG"
 
-labels_gunc = ['Number of scaffolds',
-               'n_genes_called',
+labels_gunc = ['n_genes_called',
                'n_genes_mapped',
                'n_contigs',
                'proportion_genes_retained_in_major_clades',
@@ -181,7 +180,7 @@ app.layout = html.Div([
                                                                 min=0,
                                                                 max=100,
                                                                 step=10,
-                                                                value=50,
+                                                                value=10,
                                                                 marks={1:{'label':'0%', 'style':{'font-size':'16px'}},
                                                                        100:{'label':'100%', 'style':{'font-size':'16px'}}},
                                                                 size=350,
@@ -248,7 +247,7 @@ app.layout = html.Div([
                                                     {"label": label_gunc, "value": label_gunc}
                                                     for label_gunc in labels_gunc
                                                 ],
-                                                value="Number of scaffolds",
+                                                value='clade_separation_score',
                                                 clearable=False,
                                                 className="dropdown",
                                                 style={'width':'500px'}
@@ -297,7 +296,7 @@ app.layout = html.Div([
                                                                50:{'label':'50', 'style':{'font-size':'18px'}},
                                                                75:{'label':'75', 'style':{'font-size':'18px'}},
                                                                100: {'label':'100', 'style':{'font-size':'18px'}}},
-                                                        value=[0,20]
+                                                        value=[0,100]
                                                         ),
                                                 ]
                                             )],
@@ -317,7 +316,7 @@ app.layout = html.Div([
                                                                50:{'label':'50', 'style':{'font-size':'18px'}},
                                                                75:{'label':'75', 'style':{'font-size':'18px'}},
                                                                100: {'label':'100', 'style':{'font-size':'18px'}}},
-                                                        value=[0,20]
+                                                        value=[0,100]
                                                         ),
                                                 ]
                                             )],
@@ -462,7 +461,7 @@ def update_figure_busco(frag_slider,miss_slider):
                     x = "Duplicated",
                     y = "Complete",
                     color = "sample",
-                    hover_data=['Name']
+                    hover_data=['Assembly']
         )
     fig.update_traces(marker=dict(size=14))
     fig.update_layout(font=dict(size=18),
@@ -488,7 +487,7 @@ def update_figure_checkm2(checkm2_param):
                     y = "Completeness",
                     color = "sample",
                     size = "Genome size (Mbp)",
-                    hover_data=['Name']
+                    hover_data=['Assembly']
         )
     fig.update_layout(font=dict(size=18),
                           xaxis_title="Contamination(%)",

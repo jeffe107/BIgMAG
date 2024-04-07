@@ -2,7 +2,7 @@ process BUSCO {
 	tag "$sample"
 
 	conda "bioconda::busco=5.7.0"
-	container "${ params.use_singularity == 'yes' ?
+	container "${ params.use_singularity ?
             'https://depot.galaxyproject.org/singularity/busco:5.7.0--pyhdfd78af_1' :
             'quay.io/biocontainers/busco:5.7.0--pyhdfd78af_1' }"
 	
