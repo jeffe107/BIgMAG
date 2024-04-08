@@ -47,25 +47,28 @@ if len(df_gtdbtk2) == 0:
 
 #Creating QUAST df
 path_quast = f"{files}/quast/transposed_report.tsv"
-df_quast = pd.read_csv(path_quast, sep='\t')
+if  os.path.isfile(path_quast):
+     df_quast = pd.read_csv(path_quast, sep='\t')
+else:
+     df_quast = pd.DataFrame({'Assembly': ['empty_df']})
 
-#Merging dfs, QUAST df is used as base df, if QUAST fails, this script is going to fail
-df_list = [df_busco, df_checkm2, df_gtdbtk2, df_gunc]
-column_names = ['Input_file', 'Name', 'user_genome', 'genome']
+#Merging dfs, CheckM2 df is used as base df, if CheckM2 fails, this script is going to fail
+df_list = [df_checkm2, df_gtdbtk2, df_gunc, df_quast]
+column_names = ['Name', 'user_genome', 'genome', 'Assembly']
 for i in range(len(df_list)):
-    df_quast = pd.merge(df_quast, df_list[i], left_on='Assembly', right_on=column_names[i], how='left')
+    df_busco = pd.merge(df_busco, df_list[i], left_on='Input_file', right_on=column_names[i], how='left')
 
-df_quast = df_quast.drop(columns=column_names)
-df_quast = df_quast.sort_values(['Assembly'])
-df_quast = df_quast.reset_index(drop=True)
+df_busco = df_busco.drop(columns=column_names)
+df_busco = df_busco.sort_values(['Input_file'])
+df_busco = df_busco.reset_index(drop=True)
 
 #Exporting the file
-df_concat = df_quast
+df_concat = df_busco
 df_concat['sample'] = [sample] * len(df_concat)
-df_concat.to_csv(f"{files}/dfs_concat/dfs.tsv", sep="\t")
+df_concat.to_csv(f"{files}/dfs_concat/dfs.tsv", sep="\t", index=False)
+
 file_path = f"{outdir}/paths.txt"
 paths = open(file_path, "a")
 paths.write(f"{files}/dfs_concat/dfs.tsv" + '\n')
 paths.close()
-
 print(f"{sample} ready", file=sys.stdout)

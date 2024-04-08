@@ -461,7 +461,7 @@ def update_figure_busco(frag_slider,miss_slider):
                     x = "Duplicated",
                     y = "Complete",
                     color = "sample",
-                    hover_data=['Assembly']
+                    hover_data=['Input_file']
         )
     fig.update_traces(marker=dict(size=14))
     fig.update_layout(font=dict(size=18),
@@ -487,7 +487,7 @@ def update_figure_checkm2(checkm2_param):
                     y = "Completeness",
                     color = "sample",
                     size = "Genome size (Mbp)",
-                    hover_data=['Assembly']
+                    hover_data=['Input_file']
         )
     fig.update_layout(font=dict(size=18),
                           xaxis_title="Contamination(%)",

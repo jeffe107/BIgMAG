@@ -21,6 +21,6 @@ process CONCAT_DFS {
 	def outdir = params.outdir
 	"""
 	mkdir -p "${outdir}/${sample}/dfs_concat"
-	concat_dfs.py "${outdir}/${sample}" ${sample} "${outdir}"
+	concat_dfs.py "${outdir}/${sample}" ${sample} ${outdir}
 	"""
 }
