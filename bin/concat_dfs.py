@@ -7,6 +7,16 @@ import os.path
 files = sys.argv[1]
 sample = sys.argv[2]
 outdir = sys.argv[3]
+data = sys.argv[4]
+
+# Get a list of all files in the directory
+bins = os.listdir(data)
+
+# Extract filenames without extensions
+bin_names = [os.path.splitext(bin)[0] for bin in bins]
+
+# Create a DataFrame with the file names
+df_bins = pd.DataFrame(bin_names, columns=["Bin_names"])
 
 #Creating BUSCO df
 path_busco = f"{files}/busco/batch_summary.txt"
@@ -52,18 +62,18 @@ if  os.path.isfile(path_quast):
 else:
      df_quast = pd.DataFrame({'Assembly': ['empty_df']})
 
-#Merging dfs, CheckM2 df is used as base df, if CheckM2 fails, this script is going to fail
-df_list = [df_checkm2, df_gtdbtk2, df_gunc, df_quast]
-column_names = ['Name', 'user_genome', 'genome', 'Assembly']
+#Merging dfs
+df_list = [df_busco, df_checkm2, df_gtdbtk2, df_gunc, df_quast]
+column_names = ['Input_file','Name', 'user_genome', 'genome', 'Assembly']
 for i in range(len(df_list)):
-    df_busco = pd.merge(df_busco, df_list[i], left_on='Input_file', right_on=column_names[i], how='left')
+    df_bins = pd.merge(df_bins, df_list[i], left_on='Bin_names', right_on=column_names[i], how='left')
 
-df_busco = df_busco.drop(columns=column_names)
-df_busco = df_busco.sort_values(['Input_file'])
-df_busco = df_busco.reset_index(drop=True)
+df_bins = df_bins.drop(columns=column_names)
+df_bins = df_bins.sort_values(['Bin_names'])
+df_bins = df_bins.reset_index(drop=True)
 
 #Exporting the file
-df_concat = df_busco
+df_concat = df_bins
 df_concat['sample'] = [sample] * len(df_concat)
 df_concat.to_csv(f"{files}/dfs_concat/dfs.tsv", sep="\t", index=False)
 

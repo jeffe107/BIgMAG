@@ -8,14 +8,15 @@ process QUAST {
 
 	input:
 	tuple val(sample), path(files)
-	val "empty_bins"
+	val "change_dots_for_underscore"
 
 	output:
 	path "*"
 
 	script:
-	def args = task.ext.args
+	def max_reference = "--max-ref-number ${params.max_ref_number}"
+	def min_contig = "--min-contig ${params.min_contig}"
 	"""
-	quast.sh ${files} $args $task.cpus
+	quast.sh ${files} $max_reference $min_contig $task.cpus
 	"""
 }

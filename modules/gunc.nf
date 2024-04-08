@@ -10,14 +10,16 @@ process GUNC {
 
 	input:
 	tuple val(sample), path(files)
-	val "empty_bins"
+	val "gunc_db"
 
 	output:		
 	path "gunc/GUNC.progenomes_2.1.maxCSS_level.tsv", optional: true
 
 	script:
-	def args = task.ext.args
-	def args2 = task.ext.args2 ?: ''
+	def gunc_db = params.gunc_db ?
+				"-r ${params.gunc_db}" :
+				"-r ${params.outdir}/databases/GUNC_db/gunc_db_progenomes2.1.dmnd"
+	def args = task.ext.args ?: ''
 	"""
 	mkdir gunc
 	EXTENSION=\$(echo ".\$(ls ${files}/* | head -n 1 | rev | cut -d. -f1 | rev)")
@@ -25,6 +27,6 @@ process GUNC {
 	-o gunc \
 	--threads $task.cpus \
 	--file_suffix \$EXTENSION \
-	$args $args2
+	$gunc_db $args 
 	"""
 }

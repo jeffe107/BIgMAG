@@ -8,18 +8,18 @@ process BUSCO {
 	
 	input:
 	tuple val(sample), path(files)
-	val "empty_bins"
+	val "change_dots_for_underscore"
 
 	output:
 	path "busco"
 
 	script:
-	def args = task.ext.args
-	def args2 = task.ext.args2 ?: ''
+	def lineage = params.lineage == 'auto_lineage' ? "--auto-lineage" : "-l ${params.lineage}"
+	def args = task.ext.args ?: ''
 	"""
 	busco -i $files \
         -o busco \
 	-m genome -c $task.cpus --force \
-	$args $args2
+	$lineage $args
 	"""
 }

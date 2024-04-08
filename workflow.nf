@@ -10,12 +10,14 @@
 include { BUSCO				}	from './modules/busco.nf'
 include { CHANGE_DOT_FOR_UNDERSCORE	}	from './modules/change_dot_for_underscore.nf'
 include { CHECKM2			}	from './modules/checkm2.nf'
+include { CHECKM2_DB			}	from './modules/checkm2_db.nf'
 include { CONCAT_DFS			}	from './modules/concat_dfs.nf'
 include { DECOMPRESS			}	from './modules/decompress.nf'
 include { EMPTY_BINS			}	from './modules/empty_bins.nf'
 include { FINAL_DF			}	from './modules/final_df.nf'
 include { GTDBTK2			}	from './modules/gtdbtk2.nf'
 include { GUNC				}	from './modules/gunc.nf'
+include { GUNC_DB			}	from './modules/gunc_db'
 include { QUAST				}	from './modules/quast.nf'
 include { REMOVE_TMP			}	from './modules/remove_tmp.nf'
 
@@ -35,11 +37,13 @@ workflow BIgMAGFlow {
 
 		busco_ch = BUSCO(files_ch, change_dot_for_underscore_ch).collect()
                 
-                if(params.checkm2_db){
-                    checkm2_ch = CHECKM2(files_ch, change_dot_for_underscore_ch).collect()
+                if(!params.checkm2_db){
+                    checkm2_db_ch = CHECKM2_DB(change_dot_for_underscore_ch)
                 } else {
-                    checkm2_ch = []
+                    checkm2_db_ch = []
                 }
+
+		checkm2_ch = CHECKM2(files_ch, checkm2_db_ch).collect()
 
                 if(params.gtdbtk2_db){
                     gtdbtk2_ch = GTDBTK2(files_ch, change_dot_for_underscore_ch).collect()
@@ -47,11 +51,13 @@ workflow BIgMAGFlow {
                     gtdbtk2_ch = []
                 }
                            
-                if(params.gunc_db){
-                    gunc_ch = GUNC(files_ch, change_dot_for_underscore_ch).collect()
+                if(!params.gunc_db){
+                    gunc_db_ch = GUNC_DB(change_dot_for_underscore_ch)
                 } else {
-                    gunc_ch = []
+                    gunc_db_ch = []
                 }
+
+                gunc_ch = GUNC(files_ch, gunc_db_ch).collect()
 		
                 quast_ch = QUAST(files_ch, change_dot_for_underscore_ch).collect()
 

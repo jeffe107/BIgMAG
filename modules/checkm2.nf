@@ -9,20 +9,22 @@ process CHECKM2 {
 
 	input:
 	tuple val(sample), path(files)
-	val "empty_bins"
+	val "checkm2_db"
 
 	output:
 	path "checkm2"
 
 	script:
-	def args = task.ext.args
-        def args2 = task.ext.args2 ?: ''
+	def checkm2_db = params.checkm2_db ? 
+				"--database_path ${params.checkm2_db}" :
+				"--database_path ${params.outdir}/databases/CheckM2_database/uniref100.KO.1.dmnd"
+	def args = task.ext.args ?: ''
 	"""
 	EXTENSION=\$(echo ".\$(ls ${files}/* | head -n 1 | rev | cut -d. -f1 | rev)")
 	checkm2 predict \
         --threads $task.cpus \
         --input $files -x \$EXTENSION \
         --output-directory checkm2 \
-	$args $args2
+	$checkm2_db $args
 	"""
 }
