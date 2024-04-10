@@ -10,11 +10,13 @@ process CHECKM2 {
 	input:
 	tuple val(sample), path(files)
 	val "checkm2_db"
+	val "gtdbtk2_db"
 
 	output:
 	path "checkm2"
 
 	script:
+	def outdir = params.outdir
 	def checkm2_db = params.checkm2_db ? 
 				"--database_path ${params.checkm2_db}" :
 				"--database_path ${params.outdir}/databases/CheckM2_database/uniref100.KO.1.dmnd"
@@ -26,5 +28,8 @@ process CHECKM2 {
         --input $files -x \$EXTENSION \
         --output-directory checkm2 \
 	$checkm2_db $args
+	software_name="CheckM2" && output_file="${outdir}/pipeline_info/versions.txt" \
+	&& grep -q "\$software_name" "\$output_file" || \
+	{ echo -n "\$software_name Version: " >> "\$output_file" && checkm2 --version >> "\$output_file"; }
 	"""
 }

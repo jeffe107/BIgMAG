@@ -11,14 +11,16 @@ process GUNC {
 	input:
 	tuple val(sample), path(files)
 	val "gunc_db"
+	val "gtdbtk2_db"
 
 	output:		
 	path "gunc/GUNC.progenomes_2.1.maxCSS_level.tsv", optional: true
 
 	script:
+	def outdir = params.outdir
 	def gunc_db = params.gunc_db ?
 				"-r ${params.gunc_db}" :
-				"-r ${params.outdir}/databases/GUNC_db/gunc_db_progenomes2.1.dmnd"
+				"-r ${outdir}/databases/GUNC_db/gunc_db_progenomes2.1.dmnd"
 	def args = task.ext.args ?: ''
 	"""
 	mkdir gunc
@@ -27,6 +29,9 @@ process GUNC {
 	-o gunc \
 	--threads $task.cpus \
 	--file_suffix \$EXTENSION \
-	$gunc_db $args 
+	$gunc_db $args
+	software_name="GUNC" && output_file="${outdir}/pipeline_info/versions.txt" \
+        && grep -q "\$software_name" "\$output_file" || \
+        { echo -n "\$software_name Version: " >> "\$output_file" && gunc -v >> "\$output_file"; }
 	"""
 }

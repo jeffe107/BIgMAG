@@ -9,11 +9,13 @@ process BUSCO {
 	input:
 	tuple val(sample), path(files)
 	val "change_dots_for_underscore"
+	val "gtdbtk2_db"
 
 	output:
 	path "busco"
 
 	script:
+	def outdir = params.outdir
 	def lineage = params.lineage == 'auto_lineage' ? "--auto-lineage" : "-l ${params.lineage}"
 	def args = task.ext.args ?: ''
 	"""
@@ -21,5 +23,8 @@ process BUSCO {
         -o busco \
 	-m genome -c $task.cpus --force \
 	$lineage $args
+	software_name="BUSCO" && output_file="${outdir}/pipeline_info/versions.txt" \
+        && grep -q "\$software_name" "\$output_file" || \
+        { busco -v >> "\$output_file"; }
 	"""
 }

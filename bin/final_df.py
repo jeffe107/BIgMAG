@@ -15,7 +15,9 @@ final_df = pd.DataFrame()
 for df in dfs_list:
     final_df = pd.concat([final_df, df], axis=0, ignore_index=True)
 
-final_df = final_df.sort_values(['sample'])
+first_column = final_df.pop('sample')
+final_df.insert(0,'sample',first_column)
+final_df = final_df.sort_values(['sample', 'Bin'])
 final_df = final_df.reset_index(drop=True)
 
 final_df.to_csv(f"{publish_dir}/final_df.tsv", sep="\t")

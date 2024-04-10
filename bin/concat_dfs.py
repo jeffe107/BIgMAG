@@ -16,7 +16,7 @@ bins = os.listdir(data)
 bin_names = [os.path.splitext(bin)[0] for bin in bins]
 
 # Create a DataFrame with the file names
-df_bins = pd.DataFrame(bin_names, columns=["Bin_names"])
+df_bins = pd.DataFrame(bin_names, columns=["Bin"])
 
 #Creating BUSCO df
 path_busco = f"{files}/busco/batch_summary.txt"
@@ -66,10 +66,9 @@ else:
 df_list = [df_busco, df_checkm2, df_gtdbtk2, df_gunc, df_quast]
 column_names = ['Input_file','Name', 'user_genome', 'genome', 'Assembly']
 for i in range(len(df_list)):
-    df_bins = pd.merge(df_bins, df_list[i], left_on='Bin_names', right_on=column_names[i], how='left')
+    df_bins = pd.merge(df_bins, df_list[i], left_on='Bin', right_on=column_names[i], how='left')
 
 df_bins = df_bins.drop(columns=column_names)
-df_bins = df_bins.sort_values(['Bin_names'])
 df_bins = df_bins.reset_index(drop=True)
 
 #Exporting the file

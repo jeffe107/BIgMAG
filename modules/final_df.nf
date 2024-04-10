@@ -16,5 +16,9 @@ process FINAL_DF {
 	def outdir = params.outdir
 	"""
 	final_df.py "${outdir}/paths.txt" $outdir
+	[ -f "${outdir}/paths.txt" ] && rm -r "${outdir}/paths.txt"
+	echo -n "pandas: " >> ${outdir}/pipeline_info/versions.txt
+	pandas_version.py >> ${outdir}/pipeline_info/versions.txt
+	echo "Final DF is ready"
 	"""
 }
