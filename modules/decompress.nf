@@ -5,13 +5,13 @@ process DECOMPRESS {
 	tuple val(sample), path(files)
 
 	output:
-	stdout
+	tuple val(sample), path(files), stdout
 
 	script:
 	def outdir = params.outdir
 	"""
 	if ls ${files}/*.gz; then gzip -d ${files}/*.gz; fi
 	touch ${outdir}/pipeline_info/versions.txt
-	echo 'files are ready'
+	echo "Files are ready"
 	"""
 }

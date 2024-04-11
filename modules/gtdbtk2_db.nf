@@ -6,9 +6,6 @@ process GTDBTK2_DB {
             'quay.io/biocontainers/gtdbtk:2.3.2--pyhdfd78af_0' }"
 	containerOptions "${ params.directory_to_bind == null ? '' : "--bind ${params.directory_to_bind}" }"        
 
-	input:
-	val "change_dots_for_underscore"
-
 	output:
 	stdout
 

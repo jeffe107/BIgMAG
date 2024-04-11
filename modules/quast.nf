@@ -7,8 +7,7 @@ process QUAST {
             'quay.io/biocontainers/quast:5.2.0--py38pl5321h5cf8b27_3' }"
 
 	input:
-	tuple val(sample), path(files)
-	val "change_dots_for_underscore"
+	tuple val(sample), path(files), val(change_dot_for_underscore)
 	val "gtdbtk2_db"
 
 	output:

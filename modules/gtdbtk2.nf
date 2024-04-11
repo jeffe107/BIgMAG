@@ -8,7 +8,7 @@ process GTDBTK2 {
 	containerOptions "${ params.directory_to_bind == null ? '' : "--bind ${params.directory_to_bind}" }"
 
 	input:
-	tuple val(sample), path(files)
+	tuple val(sample), path(files), val(change_dot_for_underscore)
 	val "gtdbtk2_db"
 
 	output:

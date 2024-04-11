@@ -2,17 +2,16 @@ process EMPTY_BINS {
 	tag "$sample"
 	
 	input:
-	tuple val(sample), path(files)
-	val "decompress"
+	tuple val(sample), path(files), val(decompressed)
 
 	output:
-	stdout
+	tuple val(sample), path(files), stdout
 
 	script:
-	outdir = "${params.outdir}/$sample"
+	def outdir = params.outdir
 
 	"""
-	empty_bins.sh ${files} $outdir 
-	echo 'files are ready'
+	empty_bins.sh ${files} $outdir $sample
+	echo "Files are ready"
 	"""
 }

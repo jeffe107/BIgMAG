@@ -6,9 +6,6 @@ process GUNC_DB {
             'quay.io/biocontainers/gunc:1.0.6--pyhdfd78af_0' }"
 	containerOptions "${ params.directory_to_bind == null ? '' : "--bind ${params.directory_to_bind}" }"
 
-	input:
-	val "change_dots_for_underscore"
-
 	output:
 	stdout
 

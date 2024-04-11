@@ -7,8 +7,7 @@ process BUSCO {
             'quay.io/biocontainers/busco:5.7.0--pyhdfd78af_1' }"
 	
 	input:
-	tuple val(sample), path(files)
-	val "change_dots_for_underscore"
+	tuple val(sample), path(files), val(change_dot_for_underscore)
 	val "gtdbtk2_db"
 
 	output:

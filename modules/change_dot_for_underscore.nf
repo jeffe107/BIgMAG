@@ -2,15 +2,14 @@ process CHANGE_DOT_FOR_UNDERSCORE {
 	tag "$sample"
 
 	input:
-	tuple val(sample), path(files)
-	val "empty_bins"
+	tuple val(sample), path(files), val(empty_bins)
 
 	output:
-	stdout
+	tuple val(sample), path(files), stdout
 
 	script:
 	"""
 	change_dot_for_underscore.sh ${files}
-	echo 'files are ready'
+	echo "Files are ready"
 	"""
 }

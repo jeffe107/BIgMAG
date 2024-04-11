@@ -19,6 +19,8 @@ process FINAL_DF {
 	[ -f "${outdir}/paths.txt" ] && rm -r "${outdir}/paths.txt"
 	echo -n "pandas: " >> ${outdir}/pipeline_info/versions.txt
 	pandas_version.py >> ${outdir}/pipeline_info/versions.txt
+	sort ${outdir}/pipeline_info/versions.txt | uniq > ${outdir}/pipeline_info/version.txt
+	[ -f "${outdir}/pipeline_info/versions.txt" ] && rm -r "${outdir}/pipeline_info/versions.txt"
 	echo "Final DF is ready"
 	"""
 }

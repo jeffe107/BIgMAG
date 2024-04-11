@@ -7,7 +7,7 @@ process CONCAT_DFS {
             'quay.io/biocontainers/bioframe:0.6.2--pyhdfd78af_0' }"
 
 	input:
-	tuple val(sample), path(files)
+	tuple val(sample), path(files), val(change_dot_for_underscore)
 	val "checkm2"
 	val "busco"
 	val "gunc"

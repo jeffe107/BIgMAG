@@ -2,7 +2,7 @@ process REMOVE_TMP {
 	tag "$sample"
 
 	input:
-	tuple val(sample), path(files)
+	tuple val(sample), path(files), val(change_dot_for_underscore)
 	val "std_output"
 
 	output:
