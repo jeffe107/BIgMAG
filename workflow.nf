@@ -28,8 +28,15 @@ include { REMOVE_TMP			}	from './modules/remove_tmp.nf'
 
 workflow BIgMAGFlow {
 		// Input channels
-                files_ch = Channel.fromPath( params.files, type: 'dir').map {tuple(it.baseName,it )}
-		
+                
+		if(params.files){
+		    files_ch = Channel.fromPath( params.files, type: 'dir').map {tuple(it.baseName,it )}
+		} else {
+		    files_ch = Channel.fromPath( params.csv_files )
+				   .splitCsv(header:true)
+				   .map { row-> tuple(row.sampleId, file(row.files)) }
+		}
+
 		// Workflow including different tools
 				
 		decompress_ch = DECOMPRESS(files_ch)
