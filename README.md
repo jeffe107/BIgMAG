@@ -27,7 +27,7 @@ On the other hand, you need Conda or Mamba (recommended versions 23.3.1 and 1.3.
 ```
 or
 ```bash
- conda create -n BIgMAG --file requirements.txt
+ conda create -n BIgMAG --file BIgMAG/requirements.txt
  conda activate BIgMAG
 ```
 ## Pipeline summary
