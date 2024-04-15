@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the array of allowed directory names
-allowed_directories=("busco" "checkm2" "gtdbtk2" "gunc" "quast")
+allowed_directories=("busco" "checkm2" "gtdbtk2" "gunc" "quast" "empty_bins")
 
 # Specify the directory to check
 directory_to_check=$1
