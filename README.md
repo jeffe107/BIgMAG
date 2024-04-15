@@ -23,7 +23,7 @@ To install BIgMAG, you just need to copy this repository:
 ```
 On the other hand, you need Conda or Mamba (recommended versions 23.3.1 and 1.3.1) or [pip](https://pip.pypa.io/en/stable/installation/) in your system to display the dashboard. Create the environment or install the components with:
 ```bash
- pip install -r requirements.txt 
+ pip install -r BIgMAG/requirements.txt 
 ```
 or
 ```bash
