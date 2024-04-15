@@ -1,11 +1,8 @@
 
 # BIgMAG
-<h1>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/BIGMAG.png">
-    <img alt="nf-core/mag" src="assets/BIGMAG.png">
-  </picture>
-</h1>
+<p align="center">
+    <img src="assets/BIGMAG.png" alt="BIgMAG workflow overview" width="50%">
+</p>
 
 BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is both a pipeline to measure the quality of metagenomes and dashboard to visualize the results.
 
@@ -65,6 +62,10 @@ In addition, you can provide a .csv file with the names of the samples and the p
 Please check in the Usage section to see how to input or another.
 
 By default, the Nextflow pipeline currently attempts to analyze bins or MAGs through the following:
+
+<p align="center">
+    <img src="assets/workflow.png" alt="BIgMAG workflow overview" width="90%">
+</p>
 
 - examines completeness and contamination with [CheckM2](https://github.com/chklovski/CheckM2) v1.0.1 and [BUSCO](https://busco.ezlab.org/busco_userguide.html) v5.7.0.
 - determines different metrics and statistics using [QUAST](https://quast.sourceforge.net/) v5.2.0.
