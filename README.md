@@ -107,3 +107,8 @@ Finally, when using mamba or conda as profiles, you may want to make sure you ha
 
 Permalink to reference line of code:
 https://github.com/jeffe107/BIgMAG/blob/244f2d9a783ff0ee4dc6971d376d2ad90be91cb8/nextflow.config#L50
+
+
+https://github.com/jeffe107/BIgMAG/assets/91961180/56700df1-0104-47b0-b473-b2d1c780beac
+
+
