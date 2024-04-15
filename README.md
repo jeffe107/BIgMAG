@@ -102,13 +102,11 @@ The pipeline can use different techonologies to run the required software. The a
 - mamba
 - apptainer
 
-Please select one of these considering your system configuration. Natively, the pipeline will use docker container from [quay.io](https://quay.io/)
-> [!WARNING]
-> If you are using profiles such as singularity or apptainer, please always include the flag `--singularity_container` during your execution. This will allow to pull containers from [Galaxy project](https://depot.galaxyproject.org/singularity/).
+Please select one of these considering your system configuration. Natively, the pipeline will pull the container from [quay.io](https://quay.io/). In the case of singularity and apptainer profiles, the pipeline will pull containers from [Galaxy project](https://depot.galaxyproject.org/singularity/).
 
 Furthermore, if the execution of the pipeline fails while using profiles that require to mount directories, i.e. apptainer, throwing an error related with problems to find any file you can attempt to solve this by including the flag `--directory_to_bind 'path/to/the/directory'`.
 
 Finally, when using mamba or conda as profiles, you may want to make sure you have only bioconda, conda-forge and defaults as available channels, in that order.
 
 Permalink to reference line of code:
-https://github.com/jeffe107/BIgMAG/blob/a7c4247ab63905452b64d82fc4c6264d9bb3e711/nextflow.config#L50
+https://github.com/jeffe107/BIgMAG/blob/244f2d9a783ff0ee4dc6971d376d2ad90be91cb8/nextflow.config#L50
