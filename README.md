@@ -1,6 +1,11 @@
 
 # BIgMAG
-
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/BIGMAG.png">
+    <img alt="nf-core/mag" src="assets/BIGMAG.png">
+  </picture>
+</h1>
 
 BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is both a pipeline to measure the quality of metagenomes and dashboard to visualize the results.
 
