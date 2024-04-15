@@ -4,7 +4,7 @@
     <img src="assets/BIGMAG.png" alt="BIgMAG workflow overview" width="50%">
 </p>
 
-BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is both a pipeline to measure the quality of metagenomes and dashboard to visualize the results.
+BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipeline to measure the quality of metagenomes through multiples pieces and dashboard to visualize the data generated during the analysis process.
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -56,8 +56,8 @@ In addition, you can provide a .csv file with the names of the samples and the p
 | ...           | ...              |
 
 Please check in the Usage section to see how to input or another.
-
-By default, the Nextflow pipeline currently attempts to analyze bins or MAGs through the following:
+> [!WARNING]
+> Please make sure that all of the bins in the same folder have the same extension. Bins belonging to different samples can have different extensions.
 
 <p align="center">
     <img src="assets/workflow.png" alt="BIgMAG workflow overview" width="90%">
@@ -104,10 +104,12 @@ Please select one of these considering your system configuration. Natively, the 
 Furthermore, if the execution of the pipeline fails while using profiles that require to mount directories, i.e. apptainer, throwing an error related with problems to find any file you can attempt to solve this by including the flag `--directory_to_bind 'path/to/the/directory'`.
 
 Finally, when using mamba or conda as profiles, you may want to make sure you have only bioconda, conda-forge and defaults as available channels, in that order.
+### Executors
+In its default state, the pipeline will use the local executor to perform the requested tasks, this means that it will only attempt to use the available resources at the moment. Nonetheless, if you wish to take advantage from other executors as slurm, sge, bridge or cloud-based infrastructure such as AWS or Azure, you can include especific profiles to achieve this task (check the Nextflow documentation for [this](https://www.nextflow.io/docs/latest/executor.html#)). For instance, to allow slurm execution, you can modify the configuration of the general file by creating your own customized profile (uncommenting the line): 
 
-Permalink to reference line of code:
 https://github.com/jeffe107/BIgMAG/blob/244f2d9a783ff0ee4dc6971d376d2ad90be91cb8/nextflow.config#L50
 
+If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
 
 https://github.com/jeffe107/BIgMAG/assets/91961180/56700df1-0104-47b0-b473-b2d1c780beac
 
