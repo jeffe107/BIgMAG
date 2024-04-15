@@ -694,7 +694,7 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
     return fig
 
 if __name__ == '__main__':
-    app.run(port=port, debug=True)
+    app.run(port=port)
 
 
 
