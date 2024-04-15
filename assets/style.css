@@ -1,0 +1,110 @@
+body {
+    font-family: "Lato", sans-serif;
+    margin: 0;
+    background-color: #FFFFFF;
+}
+
+.header {
+    background-color: #222222;
+    height: 250px;
+    padding: 16px 0 0 0;
+}
+
+.header-emoji {
+    font-size: 64px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header-title {
+    color: #000000;
+    font-size: 64px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.header-description {
+    color: #000000;
+    margin: 4px auto;
+    text-align: center;
+    font-size: 32px;
+}
+
+.wrapper {
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.card {
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+}
+
+.menu {
+    height: 112px;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #F7F7F7;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+    padding-right: 10px;
+    padding-left: 10px;
+    max-width: 1024px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+}
+
+.Select-control {
+    width: 256px;
+    height: 48px;
+}
+
+.Select--single>.Select-control .Select-value,
+.Select-placeholder {
+    line-height: 48px;
+}
+
+.Select--multi .Select-value-label {
+    line-height: 32px;
+}
+
+.menu-title {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #22ae63;
+    text-align: center;
+    font-size: 22px;
+}
+
+.slider-title{
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #22ae63;
+    text-align: center;
+    font-size: 32px;
+    margin-top: 32px;
+}
+
+.dropdown{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    margin-bottom: 15px;
+    font-size: 20px;
+    background-color: #F7F7F7;
+}
+
+.drag-n-drop{
+   width: 50%;
+   height: 60px;
+   margin: 10px;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   font-size: 24px;
+   background-color: #F7F7F7;
+}

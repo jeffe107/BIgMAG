@@ -1,6 +1,0 @@
-BUSCO 5.7.0
-CheckM2 Version: 1.0.1
-GUNC Version: 1.0.6
-QUAST v5.2.0
-gtdbtk: version 2.3.2 Copyright 2017 Pierre-Alain Chaumeil, Aaron Mussig and Donovan Parks
-pandas: 1.5.2

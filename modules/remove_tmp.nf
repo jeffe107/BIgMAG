@@ -11,8 +11,7 @@ process REMOVE_TMP {
 	script:
 	def outdir = params.outdir
 	"""
-	[ -d "${outdir}/${sample}/tmp" ] && rm -r "${outdir}/${sample}/tmp"
-	[ -d "${outdir}/${sample}/dfs_concat" ] && rm -r "${outdir}/${sample}/dfs_concat"
+	delete_files.sh "${outdir}/${sample}"
 	echo "Temporary files deleted. Your BIgMAG is ready"
 	"""
 }
