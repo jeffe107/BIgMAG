@@ -90,7 +90,7 @@ Running the pipeline in its default state will attempt to download automaically 
 
 In the case of the database required by GTDB-Tk2, BIgMAG does not download by default given its large required space (~85 GB); however if you include the flag `--run_gtdbtk2` to both automatically download the database and run the analysis. As for CheckM2 and GUNC, you can input your own version of the database with `gtdbtk2_db '/pathto/to/your/gtdbtk/release*'`
 > [!WARNING]
-> Notice that when you untar any GTDB dabatase, its named release*; please keep the word release in the name to guarantee a proper detection by the pipeline.
+> Notice that when you untar any GTDB dabatase, it is stored under the name `release*`; please keep the word release in the name to guarantee a proper detection by the pipeline.
 ### Profiles
 The pipeline can use different techonologies to run the required software. The available profiles are:
 - docker
