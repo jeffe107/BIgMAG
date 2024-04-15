@@ -4,7 +4,7 @@
     <img src="assets/BIGMAG.png" alt="BIgMAG workflow overview" width="50%">
 </p>
 
-BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipeline to measure the quality of metagenomes through multiples pieces and dashboard to visualize the data generated during the analysis process.
+BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipeline to measure the quality of metagenomes through multiples pieces and dashboard to visualize the data generated during the analysis.
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -72,7 +72,7 @@ Please check in the Usage section to see how to input one or another.
 - detects chimerism and contamination by running [GUNC](https://github.com/grp-bork/gunc) v1.0.6.
 - optionally assigns taxonomy to bins using [GTDB-Tk2](https://ecogenomics.github.io/GTDBTk/index.html) v2.3.2.
 
-Finally, a file final_df.tsv will be generated and used to display the dashboard using [Dash and Plotly](https://dash.plotly.com/).
+Finally, a file named *final_df.tsv* will be generated and used to display the dashboard using [Dash and Plotly](https://dash.plotly.com/).
 
 ## Pipeline Usage
 The basic usage of the pipeline can be achieved by running: 
@@ -85,13 +85,13 @@ To run the pipeline with the default workflow:
 ```bash
  nextflow run BIgMAG/main.nf -profile <docker/singularity/podman/shifter/charliecloud/conda/mamba> --files 'path/to/the/samples/*' --outdir <OUTDIR>
 ```
-In case you wish to input a csv file with the details of your samples, you can change the flag `--files` for `--csv_files 'path/to/your/csv_files'`.
+In case you wish to input a csv file with the details of your samples, you can replace the flag `--files` for `--csv_files 'path/to/your/csv_files'`.
 ### Databases
 Running the pipeline in its default state will attempt to download automaically CheckM2 (~3.5 GB) and GUNC (~12 GB) in your specified output directory. Please make sure you have enough space to store these databases. Moreover, if you have customized or different versions you would like to use, you can use these flags to include them `--gunc_db '/path/to/your/gunc_db.dmnd'` and `--checkm2_db '/path/to/your/checkm2_db.dmnd'`.
 
 In the case of the database required by GTDB-Tk2, BIgMAG does not download by default given its large required space (~85 GB); however if you include the flag `--run_gtdbtk2` to both automatically download the database and run the analysis. As for CheckM2 and GUNC, you can input your own version of the database with `gtdbtk2_db '/pathto/to/your/gtdbtk/release*'`
 > [!WARNING]
-> Notice that when you untar any GTDB dabatase, it is stored under the name `release*`; please keep the word release in the name to guarantee a proper detection by the pipeline.
+> Notice that when you *untar* any GTDB dabatase, it is stored under the name `release*`; please keep the word release in the name to guarantee a proper detection by the pipeline.
 
 As mentioned before, the databases downloaded by the pipeline are store in your output directory inside a folder named `databases`, you may want to keep them for further runs of the pipeline and include them with the previously provided flags, speeding up the process.
 
@@ -116,9 +116,10 @@ In its default state, the pipeline will use the local executor to perform the re
 
 https://github.com/jeffe107/BIgMAG/blob/244f2d9a783ff0ee4dc6971d376d2ad90be91cb8/nextflow.config#L50
 
+Also, the pipeline, following nf-core directions, is able to check maximum resources can be requested in each system to allocate them to every job. You may want to check the file `conf/base.config` to change the resources provided to each process.
 ### Software parameters
 #### BUSCO
-By default BUSCO is going to use bacteria_odb10 lineage to search for SCO in the input bins. If you wish, to use a different lineage you can use the flag `--lineage 'your_preferred_lineage'` or even `--lineage 'auto_lineage' if want to allow BUSCO to automatically detect the correct lineage (if your samples are too diverse, the auto_lineage approach may fail). To append additional BUSCO parameters, please use the flag 
+By default BUSCO is going to use bacteria_odb10 lineage to search for SCO in the input bins. If you wish, to use a different lineage you can use the flag `--lineage 'your_preferred_lineage'` or even `--lineage 'auto_lineage'` to allow BUSCO automatically detecting the correct lineage (if your samples are too diverse, the *auto_lineage* strategy may fail). To append additional BUSCO parameters, please use the flag 
 `--busco_options '--any_flag to_run_busco'`.
 #### CheckM2, GTDB-Tk2 and GUNC
 As for BUSCO, you can append additional parameters to these tools by:
@@ -129,5 +130,6 @@ As for BUSCO, you can append additional parameters to these tools by:
 > Please check the documentation of these tools before including any additional parameter.
 #### QUAST
 To analyze the bins using QUAST, there are two parameters set that you can modify at your convenience. The max-ref-number is set to 0 to prevent QUAST to try to download reference genomes from SILVA 16S rRNA database, and align against them aftewards. If you want to enable this feature, you can add the flag `--max_ref_number <N>` (N: number between 1 and 50). Please notice that this feature sometimes may fail depending on your system configuration. Moreover, you can modify the minimun contig length detection by including  `--min_contig <N>` in your command (the default value is 150).
-
+### Output directory
+In your especified output directory, you will find folders named accordingly to your input files, and inside these the output from each of the tools executed along with a folder containing the empty bins if found. In addition, you will see the afore-mentioned directory containing the databases, if downloaded by the pipeline. Inside a directory called *pipeline_info*, you will find the execution reports generated by Nextflow. Ultimately, you will see the file *final_df.tsv*, which is the main input to display the dashboard. 
 
