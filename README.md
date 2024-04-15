@@ -12,6 +12,10 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipelin
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Static Badge](https://img.shields.io/badge/developed_with-_plotly-lightblue?style=flat&logo=plotly&logoColor=lightblue&labelColor=black)](https://plotly.com/)
 
+## A bite you will not resist!
+If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
+
+https://github.com/jeffe107/BIgMAG/assets/91961180/56700df1-0104-47b0-b473-b2d1c780beac
 
 ## Installation
 
@@ -32,7 +36,7 @@ or
 ```
 ## Pipeline summary
 
-BIgMAG receives folders containing bins or MAGs in any format (.fna, .fa, .fasta) decompressed or compressed (.gz) in the following file structure:
+BIgMAG receives folders containing bins or MAGs in any format (.fna, .fa, .fasta) decompressed or compressed (.gz), and it is able to detect empty bins to prevent the analysis failing (they are kept inside the output directory if you want to check them). The files should be input following  this file structure:
 ```bash
 .
 └── samples/
@@ -55,7 +59,7 @@ In addition, you can provide a .csv file with the names of the samples and the p
 | sample2       | path/to/sample2  |
 | ...           | ...              |
 
-Please check in the Usage section to see how to input or another.
+Please check in the Usage section to see how to input one or another.
 > [!WARNING]
 > Please make sure that all of the bins in the same folder have the same extension. Bins belonging to different samples can have different extensions.
 
@@ -81,13 +85,16 @@ To run the pipeline with the default workflow:
 ```bash
  nextflow run BIgMAG/main.nf -profile <docker/singularity/podman/shifter/charliecloud/conda/mamba> --files 'path/to/the/samples/*' --outdir <OUTDIR>
 ```
-In case you wish to input a csv file with the details of your samples, you can change the flag --files for `--files` for `--csv_files 'path/to/your/csv_files'`.
+In case you wish to input a csv file with the details of your samples, you can change the flag `--files` for `--csv_files 'path/to/your/csv_files'`.
 ### Databases
 Running the pipeline in its default state will attempt to download automaically CheckM2 (~3.5 GB) and GUNC (~12 GB) in your specified output directory. Please make sure you have enough space to store these databases. Moreover, if you have customized or different versions you would like to use, you can use these flags to include them `--gunc_db '/path/to/your/gunc_db.dmnd'` and `--checkm2_db '/path/to/your/checkm2_db.dmnd'`.
 
 In the case of the database required by GTDB-Tk2, BIgMAG does not download by default given its large required space (~85 GB); however if you include the flag `--run_gtdbtk2` to both automatically download the database and run the analysis. As for CheckM2 and GUNC, you can input your own version of the database with `gtdbtk2_db '/pathto/to/your/gtdbtk/release*'`
 > [!WARNING]
 > Notice that when you untar any GTDB dabatase, it is stored under the name `release*`; please keep the word release in the name to guarantee a proper detection by the pipeline.
+
+As mentioned before, the databases downloaded by the pipeline are store in your output directory inside a folder named `databases`, you may want to keep them for further runs of the pipeline and include them with the previously provided flags, speeding up the process.
+
 ### Profiles
 The pipeline can use different techonologies to run the required software. The available profiles are:
 - docker
@@ -109,8 +116,18 @@ In its default state, the pipeline will use the local executor to perform the re
 
 https://github.com/jeffe107/BIgMAG/blob/244f2d9a783ff0ee4dc6971d376d2ad90be91cb8/nextflow.config#L50
 
-If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
-
-https://github.com/jeffe107/BIgMAG/assets/91961180/56700df1-0104-47b0-b473-b2d1c780beac
+### Software parameters
+#### BUSCO
+By default BUSCO is going to use bacteria_odb10 lineage to search for SCO in the input bins. If you wish, to use a different lineage you can use the flag `--lineage 'your_preferred_lineage'` or even `--lineage 'auto_lineage' if want to allow BUSCO to automatically detect the correct lineage (if your samples are too diverse, the auto_lineage approach may fail). To append additional BUSCO parameters, please use the flag 
+`--busco_options '--any_flag to_run_busco'`.
+#### CheckM2, GTDB-Tk2 and GUNC
+As for BUSCO, you can append additional parameters to these tools by:
+- `--checkm2_options '--any_flag to_run_checkm2'`
+- `--gtdbtk2_options '--any_flag to_run_gtdbtk2'`
+- `--gunc2_options '--any_flag to_run_gunc'`
+> [!WARNING]
+> Please check the documentation of these tools before including any additional parameter.
+#### QUAST
+To analyze the bins using QUAST, there are two parameters set that you can modify at your convenience. The max-ref-number is set to 0 to prevent QUAST to try to download reference genomes from SILVA 16S rRNA database, and align against them aftewards. If you want to enable this feature, you can add the flag `--max_ref_number <N>` (N: number between 1 and 50). Please notice that this feature sometimes may fail depending on your system configuration. Moreover, you can modify the minimun contig length detection by including  `--min_contig <N>` in your command (the default value is 150).
 
 
