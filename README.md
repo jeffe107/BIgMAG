@@ -1,5 +1,5 @@
 
-# Project Title
+# BIgMAG
 
 
 BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is both a pipeline to measure the quality of metagenomes and dashboard to visualize the results.
