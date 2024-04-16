@@ -573,7 +573,7 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
         yaxis=dict(
             tickvals=list(range(data.shape[1])),
             ticktext=final_df.columns,
-            title='Samples',
+            title='Samples/Pipelines',
             showgrid=False,
             tickfont=dict(size=20),
             title_font=dict(size=20),
