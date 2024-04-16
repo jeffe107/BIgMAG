@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Dec  7 10:45:10 2023
-
-@author: yepesgar
-"""
 
 from dash import Dash, html, dcc, callback, Output, Input
 import plotly.express as px
 import pandas as pd
+import dash_bio as dashbio
 import dash_bootstrap_components as dbc
 import numpy as np
 import plotly.graph_objects as go
@@ -299,18 +295,13 @@ app.layout = html.Div([
                                                 ),
                                             dbc.Col(
                                                 children=[
-                                                    daq.Slider(
-                                                        vertical=True,
-                                                        id='GTDB-Tk2-slider',
-                                                        min=1,
-                                                        max=max_samples,
-                                                        step=1,
-                                                        value=max_samples,
-                                                        marks={1:{'label':'One sample', 'style':{'font-size':'20px'}},
-                                                               max_samples:{'label':'All samples', 'style':{'font-size':'20px'}}},
-                                                        size=600,
-                                                        handleLabel={"showCurrentValue": True,"label": "Sample"}
-                                                        )
+                                                    dcc.RangeSlider(1, max_samples,1, value=[1, max_samples],
+                                                                    marks={1:{'label':'One sample', 'style':{'font-size':'20px'}},
+                                                                           max_samples:{'label':'All samples', 'style':{'font-size':'20px'}}},
+                                                                    tooltip={"placement": "bottom", "always_visible": True,
+                                                                             "style": {"color": "black", "fontSize": "20px"}},
+                                                                    allowCross=False, vertical=True,
+                                                                    id='GTDB-Tk2-slider')
                                                     ],
                                                 width=1, align="center")
                                             ])
@@ -340,12 +331,10 @@ app.layout = html.Div([
                                         ]
                                     )],
                                 className="menu",
-                                )
-                            
+                                )  
                         ], width=12, className="card"),
-                ]
-                ),
-        dbc.Row([
+                ]),
+            dbc.Row([
                 dbc.Col(
                     children=[
                         html.Div(
@@ -368,27 +357,7 @@ app.layout = html.Div([
                                     )
                                 ],
                                 className="wrapper",
-                            ),
-                            html.Div(
-                                children=[
-                                    html.Div(
-                                        children=[
-                                            html.Div(children="Display text:", className="menu-title"),
-                                            dcc.RadioItems(options=['True','False'],
-                                                           value='False',
-                                                           inline=True,
-                                                           id="heatmap-selection",
-                                                           className="dropdown",
-                                                           style={'font-size':'20px',
-                                                                  'width':'500px'},
-                                                           labelStyle={'display': 'inline-block',
-                                                                        'margin-left': '100px',
-                                                                        'margin-right': '75px'}),
-                                        ]
-                                    )],
-                                className="menu",
-                        )
-                            
+                            )   
                         ], className="card"),
                         ],                    
                 width=12,
@@ -503,57 +472,6 @@ def update_figure_quast(quast_parameter):
     fig.update_layout(yaxis = dict(title_font = dict(size=15)))
     return fig
 
-@callback(
-    Output("heatmap", "figure"),
-    Input("GTDB-TK2-selection", "value"),
-    Input("heatmap-selection", "value")
-    )
-def update_figure_heatmap(tax_level,display_value):
-    data_df = read_data()
-    parameters_heatmap = params_heatmap()
-    parameters_to_normalize = params_to_normalize()
-    names_for_heatmap = names_heatmap()
-    final_df = pd.DataFrame()
-    for sample in data_df["sample"].sort_values().unique():
-        temp_df = data_df.loc[data_df['sample'] == sample]
-        temp_df_2 = temp_df[parameters_heatmap].mean()
-        temp_df_3 = temp_df_2.to_frame().transpose()
-        temp_df_3['sample'] = sample
-        pass_GUNC = temp_df['pass.GUNC'].value_counts()[True]/len(temp_df)
-        temp_df_3['pass.GUNC'] = pass_GUNC
-        temp_df = temp_df.reset_index(drop=True)
-        tax_series = temp_df['classification']
-        gtdbtk = extract_genus(tax_series, tax_level)
-        prop_gtdbtk = ((gtdbtk != 'Unclassified').sum())/(len(gtdbtk))
-        temp_df_3['prop_gtdbtk'] = prop_gtdbtk
-        final_df = pd.concat([final_df,temp_df_3], ignore_index = True)
-        
-    for parameter in parameters_to_normalize:
-        final_df[parameter] = final_df[parameter]/100
-    
-    parameters_heatmap.append('passed_GUNC')
-    parameters_heatmap.append('gtdbtk2')
-    names_for_heatmap.append(f"Proportion of annotated {tax_level} (GTDB-Tk2)")
-    final_df = final_df.set_index('sample')
-    final_df.columns = names_for_heatmap
-    final_df = final_df.transpose()
-    final_df = final_df.round(3)
-
-    custom_colors = [
-    (0, 'white'),
-    (0.5, '#22ae63'),
-    (1, 'black')
-    ]
-
-    fig = px.imshow(final_df,
-                    labels=dict(x="Sample/Pipeline", color="Value:"),
-                    aspect="auto", text_auto=eval(display_value), color_continuous_scale=custom_colors)
-    fig.update_xaxes(tickangle=-45)
-    fig.update_layout(font=dict(size=20),
-                      hoverlabel=dict(font_size=16))
-    
-    return fig
-
 @app.callback(
     Output('GTDB-Tk2', 'figure'),
     Input("GTDB-Tk2-slider", "value"),
@@ -561,6 +479,7 @@ def update_figure_heatmap(tax_level,display_value):
     )
 def update_gtdb_tk2(gtdbtk_parameter, tax_level):
     data_df = read_data()
+    low_samples, high_samples = gtdbtk_parameter
     genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
     
     data_df['Genus'] = genera
@@ -581,11 +500,18 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
         temp_dict = {sample: true_false_list}
         temp_df = pd.DataFrame.from_dict(temp_dict)
         final_df = pd.concat([final_df,temp_df], axis=1)
+    
     final_df = final_df.set_index('Genus')
+    final_df = final_df.transpose()
+    final_df = final_df.reset_index(drop=False)
+    final_df.index = final_df.index + 1
+    final_df = final_df.loc[(final_df.index >= low_samples) & (final_df.index <= high_samples)]
+    final_df = final_df.set_index('index', drop=True)
+    final_df = final_df.transpose()
+
     final_df['concatenated_row'] = final_df.apply(lambda x: ''.join(map(str, x)), axis=1)
     final_df = final_df.sort_values(by='concatenated_row', ascending=False)
     final_df = final_df.drop(columns=['concatenated_row'])
-    final_df.drop(final_df.columns[gtdbtk_parameter:len(final_df.columns)], axis=1, inplace=True)
     
     arr_df = final_df.to_numpy()
 
@@ -693,8 +619,66 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
     
     return fig
 
+@callback(
+    Output("heatmap", "figure"),
+    Input("GTDB-TK2-selection", "value")
+    )
+def update_figure_heatmap(tax_level):
+    data_df = read_data()
+    parameters_heatmap = params_heatmap()
+    parameters_to_normalize = params_to_normalize()
+    names_for_heatmap = names_heatmap()
+    final_df = pd.DataFrame()
+    for sample in data_df["sample"].sort_values().unique():
+        temp_df = data_df.loc[data_df['sample'] == sample]
+        temp_df_2 = temp_df[parameters_heatmap].mean()
+        temp_df_3 = temp_df_2.to_frame().transpose()
+        temp_df_3['sample'] = sample
+        pass_GUNC = temp_df['pass.GUNC'].value_counts()[True]/len(temp_df)
+        temp_df_3['pass.GUNC'] = pass_GUNC
+        temp_df = temp_df.reset_index(drop=True)
+        tax_series = temp_df['classification']
+        gtdbtk = extract_genus(tax_series, tax_level)
+        prop_gtdbtk = ((gtdbtk != 'Unclassified').sum())/(len(gtdbtk))
+        temp_df_3['prop_gtdbtk'] = prop_gtdbtk
+        final_df = pd.concat([final_df,temp_df_3], ignore_index = True)
+        
+    for parameter in parameters_to_normalize:
+        final_df[parameter] = final_df[parameter]/100
+    
+    parameters_heatmap.append('passed_GUNC')
+    parameters_heatmap.append('gtdbtk2')
+
+    color='red'
+    names_for_heatmap.append(f"Proportion of annotated <span style='color:{str(color)}'> {str(tax_level)} </span> (GTDB-Tk2)")
+    final_df = final_df.set_index('sample')
+    final_df.columns = names_for_heatmap
+    final_df = final_df.round(3)
+
+    columns = list(final_df.columns.values)
+    rows = list(final_df.index)
+    fig = dashbio.Clustergram(
+            data=final_df,
+            column_labels=list(final_df.columns.values),
+            row_labels=list(final_df.index),
+            height=720,
+            width=1920,
+            cluster='row',
+            color_map= [
+                        [0.0, 'white'],
+                        [0.5, '#22ae63'],
+                        [1.0, 'black']
+            ],
+            line_width=2,
+            color_threshold={'row': 1.5,},
+            color_list={'row': ['#636EFA', '#00CC96', '#19D3F3']}
+    )
+
+    fig.update_layout(font=dict(size=18,color='black'),
+                      hoverlabel=dict(font_size=16))
+    fig.update_xaxes(tickangle=-45,tickfont=dict(size=14))
+
+    return fig
+
 if __name__ == '__main__':
     app.run(port=port)
-
-
-
