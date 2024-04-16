@@ -15,7 +15,7 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipelin
 ## A bite you will not resist!
 If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
 
-https://github.com/jeffe107/BIgMAG/assets/91961180/56700df1-0104-47b0-b473-b2d1c780beac
+https://github.com/jeffe107/BIgMAG/assets/91961180/6e3bc6bf-24fc-4050-b944-5bcf87bf35e6
 
 ## Installation
 
