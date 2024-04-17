@@ -351,7 +351,7 @@ app.layout = html.Div([
                                         children=dcc.Graph(
                                             id="heatmap",
                                             config={"displayModeBar": True},
-                                            style={'overflowY': 'auto', 'height': '1080px', 'width': '2560px'}
+                                            style={'overflowY': 'auto', 'height': '1080px', 'width': '1920px'}
                                         ),
                                         className="card",
                                     )
