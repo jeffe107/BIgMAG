@@ -28,7 +28,7 @@ To install BIgMAG, you just need to copy this repository:
 
 ## Pipeline summary
 
-BIgMAG receives folders containing bins or MAGs in any format (.fna, .fa, .fasta) decompressed or compressed (.gz), and it is able to detect empty bins to prevent the analysis failing (they are kept inside the output directory if you want to check them). The files should be input following  this file structure:
+BIgMAG receives folders containing bins or MAGs in any format (.fna, .fa, .fasta) decompressed or compressed (.gz), and it is able to detect empty bins to prevent the analysis failing (they are kept inside the output directory if you want to check them). The files should be input following this structure:
 ```bash
 .
 └── samples/
