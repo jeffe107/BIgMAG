@@ -351,7 +351,7 @@ app.layout = html.Div([
                                         children=dcc.Graph(
                                             id="heatmap",
                                             config={"displayModeBar": True},
-                                            style={'overflowX': 'auto', 'height': '800px'}
+                                            style={'overflowY': 'auto', 'height': '1080px', 'width': '2560px'}
                                         ),
                                         className="card",
                                     )
@@ -480,144 +480,146 @@ def update_figure_quast(quast_parameter):
 def update_gtdb_tk2(gtdbtk_parameter, tax_level):
     data_df = read_data()
     low_samples, high_samples = gtdbtk_parameter
-    genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
     
-    data_df['Genus'] = genera
-    data_df = data_df.reset_index(drop=True)
+    if "classification" in data_df.columns:
+        genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
+        
+        data_df['Genus'] = genera
+        data_df = data_df.reset_index(drop=True)
+        
+        unique_genus = data_df['Genus'].unique()
+        unique_genus = unique_genus[unique_genus != '']
+        
+        final_df = pd.DataFrame({'Genus': unique_genus})
+        for sample in data_df['sample'].unique():
+            true_false_list = []
+            temp_df = data_df.loc[data_df['sample'] == sample]
+            for genus in unique_genus:
+                if genus in list(temp_df['Genus']):
+                    true_false_list.append(True)
+                else:
+                    true_false_list.append(False)
+            temp_dict = {sample: true_false_list}
+            temp_df = pd.DataFrame.from_dict(temp_dict)
+            final_df = pd.concat([final_df,temp_df], axis=1)
+        
+        final_df = final_df.set_index('Genus')
+        final_df = final_df.transpose()
+        final_df = final_df.reset_index(drop=False)
+        final_df.index = final_df.index + 1
+        final_df = final_df.loc[(final_df.index >= low_samples) & (final_df.index <= high_samples)]
+        final_df = final_df.set_index('index', drop=True)
+        final_df = final_df.transpose()
     
-    unique_genus = data_df['Genus'].unique()
-    unique_genus = unique_genus[unique_genus != '']
+        final_df['concatenated_row'] = final_df.apply(lambda x: ''.join(map(str, x)), axis=1)
+        final_df = final_df.sort_values(by='concatenated_row', ascending=False)
+        final_df = final_df.drop(columns=['concatenated_row'])
+        
+        arr_df = final_df.to_numpy()
     
-    final_df = pd.DataFrame({'Genus': unique_genus})
-    for sample in data_df['sample'].unique():
-        true_false_list = []
-        temp_df = data_df.loc[data_df['sample'] == sample]
-        for genus in unique_genus:
-            if genus in list(temp_df['Genus']):
-                true_false_list.append(True)
+        # Sample binary matrix
+        data = arr_df
+    
+        # Get the indices of True and False values
+        true_indices = np.argwhere(data)
+        false_indices = np.argwhere(~data)
+    
+        # Sort True indices by x-coordinate
+        true_indices = true_indices[np.argsort(true_indices[:, 1])]
+    
+        # Create scatter plot for True values
+        scatter_true = go.Scatter(
+            x=true_indices[:, 0],
+            y=true_indices[:, 1],
+            mode='markers',
+            marker=dict(color='black', size=16),
+            name='Present taxa'
+        )
+    
+        # Create scatter plot for False values
+        scatter_false = go.Scatter(
+            x=false_indices[:, 0],
+            y=false_indices[:, 1],
+            mode='markers',
+            marker=dict(color='gray', size=16, opacity=0.5),
+            name='Absent taxa',
+    
+        )
+    
+        # Create lines for True values within the same category
+        lines = []
+        current_category = true_indices[0, 1]
+        for i in range(1, len(true_indices)):
+            if true_indices[i, 1] == current_category:
+                line = go.Scatter(
+                    x=[true_indices[i-1, 0], true_indices[i, 0]],
+                    y=[true_indices[i-1, 1], true_indices[i, 1]],
+                    mode='lines',
+                    line=dict(color='black', width=2),
+                    showlegend=False
+                )
+                lines.append(line)
             else:
-                true_false_list.append(False)
-        temp_dict = {sample: true_false_list}
-        temp_df = pd.DataFrame.from_dict(temp_dict)
-        final_df = pd.concat([final_df,temp_df], axis=1)
+                current_category = true_indices[i, 1]
     
-    final_df = final_df.set_index('Genus')
-    final_df = final_df.transpose()
-    final_df = final_df.reset_index(drop=False)
-    final_df.index = final_df.index + 1
-    final_df = final_df.loc[(final_df.index >= low_samples) & (final_df.index <= high_samples)]
-    final_df = final_df.set_index('index', drop=True)
-    final_df = final_df.transpose()
-
-    final_df['concatenated_row'] = final_df.apply(lambda x: ''.join(map(str, x)), axis=1)
-    final_df = final_df.sort_values(by='concatenated_row', ascending=False)
-    final_df = final_df.drop(columns=['concatenated_row'])
-    
-    arr_df = final_df.to_numpy()
-
-    # Sample binary matrix
-    data = arr_df
-
-    # Get the indices of True and False values
-    true_indices = np.argwhere(data)
-    false_indices = np.argwhere(~data)
-
-    # Sort True indices by x-coordinate
-    true_indices = true_indices[np.argsort(true_indices[:, 1])]
-
-    # Create scatter plot for True values
-    scatter_true = go.Scatter(
-        x=true_indices[:, 0],
-        y=true_indices[:, 1],
-        mode='markers',
-        marker=dict(color='black', size=16),
-        name='Present taxa'
-    )
-
-    # Create scatter plot for False values
-    scatter_false = go.Scatter(
-        x=false_indices[:, 0],
-        y=false_indices[:, 1],
-        mode='markers',
-        marker=dict(color='gray', size=16, opacity=0.5),
-        name='Absent taxa',
-
-    )
-
-    # Create lines for True values within the same category
-    lines = []
-    current_category = true_indices[0, 1]
-    for i in range(1, len(true_indices)):
-        if true_indices[i, 1] == current_category:
-            line = go.Scatter(
-                x=[true_indices[i-1, 0], true_indices[i, 0]],
-                y=[true_indices[i-1, 1], true_indices[i, 1]],
-                mode='lines',
-                line=dict(color='black', width=2),
-                showlegend=False
-            )
-            lines.append(line)
-        else:
-            current_category = true_indices[i, 1]
-
-    # Create layout with white background
-    layout = go.Layout(
-        xaxis=dict(
-            tickvals=list(range(data.shape[0])),
-            ticktext=final_df.index,
-            showgrid=False,
-            tickfont=dict(size=20),
-            zeroline=False,
-            side='top'
-        ),
-        yaxis=dict(
-            tickvals=list(range(data.shape[1])),
-            ticktext=final_df.columns,
-            title='Samples/Pipelines',
-            showgrid=False,
-            tickfont=dict(size=20),
-            title_font=dict(size=20),
-            zeroline=False
-        ),
-        showlegend=True,
-        title_x=0.5,
-        paper_bgcolor='white',
-        plot_bgcolor='white',
-        font=dict(size=20),
-        shapes=[
-            dict(
-                type='rect',
-                xref='paper',
-                yref='y',
-                x0=0,
-                y0=i - 0.5,
-                x1=1,
-                y1=i + 0.5,
-                fillcolor='lightgray',
-                opacity=0.3,
-                layer='below',
-                line=dict(width=0)
-            ) for i in range(0, data.shape[1], 2)  # Highlight even rows
-        ]
-    )
-    # Create figure
-    fig = go.Figure(data=[scatter_false, scatter_true] + lines, layout=layout)
-    fig.update_xaxes(tickangle=-45)
-    fig.update_layout(legend=dict(
-        yanchor="top",
-        y=2,
-        xanchor="left",
-        x=0.5))
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
-                         type="linear"))
-    
-    highlight_label = 'Unclassified'
-    color_unclassified = 'red'
-    color_all = 'black'
-    text_colors = [f"<span style='color:{str(color_unclassified)}'> {str(highlight_label)} </span>" if label == highlight_label else f"<span style='color:{str(color_all)}'> {str(label)} </span>" for label in final_df.index]
-    fig.update_layout(xaxis=dict(ticktext=text_colors, tickmode='array', tickvals=list(range(data.shape[0]))))
-    
-    return fig
+        # Create layout with white background
+        layout = go.Layout(
+            xaxis=dict(
+                tickvals=list(range(data.shape[0])),
+                ticktext=final_df.index,
+                showgrid=False,
+                tickfont=dict(size=20),
+                zeroline=False,
+                side='top'
+            ),
+            yaxis=dict(
+                tickvals=list(range(data.shape[1])),
+                ticktext=final_df.columns,
+                title='Samples/Pipelines',
+                showgrid=False,
+                tickfont=dict(size=20),
+                title_font=dict(size=20),
+                zeroline=False
+            ),
+            showlegend=True,
+            title_x=0.5,
+            paper_bgcolor='white',
+            plot_bgcolor='white',
+            font=dict(size=20),
+            shapes=[
+                dict(
+                    type='rect',
+                    xref='paper',
+                    yref='y',
+                    x0=0,
+                    y0=i - 0.5,
+                    x1=1,
+                    y1=i + 0.5,
+                    fillcolor='lightgray',
+                    opacity=0.3,
+                    layer='below',
+                    line=dict(width=0)
+                ) for i in range(0, data.shape[1], 2)  # Highlight even rows
+            ]
+        )
+        # Create figure
+        fig = go.Figure(data=[scatter_false, scatter_true] + lines, layout=layout)
+        fig.update_xaxes(tickangle=-45)
+        fig.update_layout(legend=dict(
+            yanchor="top",
+            y=2,
+            xanchor="left",
+            x=0.5))
+        fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
+                             type="linear"))
+        
+        highlight_label = 'Unclassified'
+        color_unclassified = 'red'
+        color_all = 'black'
+        text_colors = [f"<span style='color:{str(color_unclassified)}'> {str(highlight_label)} </span>" if label == highlight_label else f"<span style='color:{str(color_all)}'> {str(label)} </span>" for label in final_df.index]
+        fig.update_layout(xaxis=dict(ticktext=text_colors, tickmode='array', tickvals=list(range(data.shape[0]))))
+        
+        return fig
 
 @callback(
     Output("heatmap", "figure"),
@@ -629,6 +631,7 @@ def update_figure_heatmap(tax_level):
     parameters_to_normalize = params_to_normalize()
     names_for_heatmap = names_heatmap()
     final_df = pd.DataFrame()
+    
     for sample in data_df["sample"].sort_values().unique():
         temp_df = data_df.loc[data_df['sample'] == sample]
         temp_df_2 = temp_df[parameters_heatmap].mean()
@@ -636,32 +639,36 @@ def update_figure_heatmap(tax_level):
         temp_df_3['sample'] = sample
         pass_GUNC = temp_df['pass.GUNC'].value_counts()[True]/len(temp_df)
         temp_df_3['pass.GUNC'] = pass_GUNC
-        temp_df = temp_df.reset_index(drop=True)
-        tax_series = temp_df['classification']
-        gtdbtk = extract_genus(tax_series, tax_level)
-        prop_gtdbtk = ((gtdbtk != 'Unclassified').sum())/(len(gtdbtk))
-        temp_df_3['prop_gtdbtk'] = prop_gtdbtk
-        final_df = pd.concat([final_df,temp_df_3], ignore_index = True)
         
+        temp_df = temp_df.reset_index(drop=True)        
+        if "classification" in temp_df.columns:
+            tax_series = temp_df['classification']
+            gtdbtk = extract_genus(tax_series, tax_level)
+            prop_gtdbtk = ((gtdbtk != 'Unclassified').sum())/(len(gtdbtk))
+            temp_df_3['prop_gtdbtk'] = prop_gtdbtk
+            final_df = pd.concat([final_df,temp_df_3], ignore_index = True)
+        else:
+            final_df = pd.concat([final_df,temp_df_3], ignore_index = True)
+            
     for parameter in parameters_to_normalize:
         final_df[parameter] = final_df[parameter]/100
     
     parameters_heatmap.append('passed_GUNC')
-    parameters_heatmap.append('gtdbtk2')
-
-    color='red'
-    names_for_heatmap.append(f"Proportion of annotated <span style='color:{str(color)}'> {str(tax_level)} </span> (GTDB-Tk2)")
+    
+    if "classification" in temp_df.columns:
+        parameters_heatmap.append('gtdbtk2')
+        color='red'
+        names_for_heatmap.append(f"Proportion of annotated <span style='color:{str(color)}'> {str(tax_level)} </span> (GTDB-Tk2)")
+    
     final_df = final_df.set_index('sample')
     final_df.columns = names_for_heatmap
     final_df = final_df.round(3)
 
-    columns = list(final_df.columns.values)
-    rows = list(final_df.index)
     fig = dashbio.Clustergram(
             data=final_df,
             column_labels=list(final_df.columns.values),
             row_labels=list(final_df.index),
-            height=720,
+            height=1080,
             width=1920,
             cluster='row',
             color_map= [
@@ -674,9 +681,9 @@ def update_figure_heatmap(tax_level):
             color_list={'row': ['#636EFA', '#00CC96', '#19D3F3']}
     )
 
-    fig.update_layout(font=dict(size=18,color='black'),
-                      hoverlabel=dict(font_size=16))
-    fig.update_xaxes(tickangle=-45,tickfont=dict(size=14))
+    fig.update_layout(font=dict(size=20,color='black'),
+                      hoverlabel=dict(font_size=18))
+    fig.update_xaxes(tickangle=-45,tickfont=dict(size=16))
 
     return fig
 
