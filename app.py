@@ -384,9 +384,10 @@ def update_figure_busco(frag_slider,miss_slider):
                     y = "Complete",
                     color = "sample",
                     hover_data=['Bin'],
-                    template="simple_white"
+                    template="simple_white",
+                    opacity=0.7
         )
-    fig.update_traces(marker=dict(size=14))
+    fig.update_traces(marker=dict(size=20))
     fig.update_layout(font=dict(size=18),
                       xaxis_title="Duplicated SCO (%)",
                       yaxis_title="Complete SCO (%)",
