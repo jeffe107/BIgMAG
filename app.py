@@ -466,6 +466,7 @@ def update_figure_gunc(gunc_parameter):
     fig = px.box(data_df, x="sample",
                  y=gunc_parameter,
                  color="pass.GUNC",
+                 color_discrete_sequence = ['orange', '#22ae63'],
                  template="simple_white"
                  )
     fig.update_xaxes(tickangle=-45)
