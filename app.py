@@ -405,7 +405,7 @@ def update_figure_checkm2(checkm2_param):
     data_df['Genome_Size'] = data_df['Genome_Size']/1000000
     data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
     data_df = data_df.loc[data_df['Completeness'] >= checkm2_param]
-    fig = px.scatter(
+    fig1 = px.scatter(
                     data_df,
                     x = "Contamination",
                     y = "Completeness",
@@ -414,6 +414,38 @@ def update_figure_checkm2(checkm2_param):
                     hover_data=['Bin'],
                     template="simple_white"
         )
+    
+    df_l = data_df.sort_values("Genome size (Mbp)")
+    min_size = data_df['Genome size (Mbp)'].min()
+    max_size = data_df['Genome size (Mbp)'].max()
+    sizes_legend = np.linspace(min_size, max_size, 5, dtype=int)
+    
+    fig2 = px.scatter(
+        df_l,
+        x=np.zeros(len(data_df)),
+        y=pd.qcut(df_l["Genome size (Mbp)"], q=5, precision=0, labels=sizes_legend).astype(str),
+        size="Genome size (Mbp)", color_discrete_sequence=['black']
+    )
+    
+    fig = go.Figure(
+        data=[t for t in fig1.data] + [t.update(xaxis="x2", yaxis="y2") for t in fig2.data],
+        layout=fig1.layout
+    )
+    
+    fig.update_layout(
+        xaxis_domain=[0, 0.92],
+        xaxis2={"domain": [0.92, 1], "matches": None, "visible": False},
+        yaxis2={"anchor": "free", "overlaying": "y", "side": "right", "position": 1},
+        showlegend=True,
+    )
+    
+    fig.update_layout(legend={'x':1.1,'y':0.5})
+    fig.add_annotation(x=1.25, y=1.07,
+                       xref='paper',
+                       yref='paper',
+                text="Genome size (Mbp)",
+                showarrow=False)
+    
     fig.update_layout(font=dict(size=18),
                           xaxis_title="Contamination (%)",
                           yaxis_title="Completeness (%)",
