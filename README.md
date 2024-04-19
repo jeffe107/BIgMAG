@@ -151,7 +151,7 @@ Even though both the pipeline and the dashboard are able to handle as many sampl
 
 On the other hand, according to your screen and resolution the layout may be disorganized during the rendering process, you can adjust this by just reloading the page and zooming-in/out to readjust the plots. The correct display of the layout was tested on Chrome v124.0.6367.62 and Firefox v124.0.2.
 
-Furthermore, you can download any plot from the dashboard by just clicking on the 📷 small icon in the upper left corner of each plot.
+Furthermore, you can download any plot from the dashboard by just clicking on the 📷 small icon in the upper right corner of each plot.
 
 ## Acknowledgments
 Tool developed under the support of the *Federal Commission for Scholarships for Foreign Students* (FCS) through the program *Swiss Government Excellence Scholarships*.
