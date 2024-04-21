@@ -153,6 +153,8 @@ On the other hand, according to your screen and resolution the layout may be dis
 
 Furthermore, you can download any plot from the dashboard by just clicking on the 📷 small icon in the upper right corner of each plot.
 
+In the case of the CheckM2 plot, if you run the pipeline including GTDB-Tk2, when you hover on the graph space you will see the taxonomical classification of each bin/MAG.
+
 ## Acknowledgments
 Tool developed under the support of the *Federal Commission for Scholarships for Foreign Students* (FCS) through the program *Swiss Government Excellence Scholarships*.
 
