@@ -11,6 +11,7 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) serves as both a pipelin
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Static Badge](https://img.shields.io/badge/developed_with-_plotly-lightblue?style=flat&logo=plotly&logoColor=lightblue&labelColor=black)](https://plotly.com/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11003957.svg)](https://doi.org/10.5281/zenodo.11003957)
 
 ## A bite you will not resist!
 If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
