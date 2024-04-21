@@ -398,10 +398,16 @@ def update_figure_busco(frag_slider,miss_slider):
 
 @callback(
     Output("CheckM2", "figure"),
-    Input("CheckM2-slider", "value")
+    Input("CheckM2-slider", "value"),
+    Input("GTDB-TK2-selection", "value")
     )
-def update_figure_checkm2(checkm2_param):
+def update_figure_checkm2(checkm2_param, tax_level):
     data_df = read_data()
+
+    if "classification" in data_df.columns:
+        tax_info = extract_genus(data_df['classification'], tax_level)
+        data_df[tax_level] = tax_info
+
     data_df['Genome_Size'] = data_df['Genome_Size']/1000000
     data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
     data_df = data_df.loc[data_df['Completeness'] >= checkm2_param]
@@ -411,7 +417,7 @@ def update_figure_checkm2(checkm2_param):
                     y = "Completeness",
                     color = "sample",
                     size = "Genome size (Mbp)",
-                    hover_data=['Bin'],
+                    hover_data=['Bin', tax_level],
                     template="simple_white"
         )
     
