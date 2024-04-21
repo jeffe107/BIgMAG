@@ -18,6 +18,7 @@ If you are curious how the dashboard looks like and check its layout even before
 
 https://github.com/jeffe107/BIgMAG/assets/91961180/6e3bc6bf-24fc-4050-b944-5bcf87bf35e6
 
+Or even better, if you want to explore BIgMAG and interact directly, please visit this link (it is not a virus, we promise!): https://bit.ly/4aOtCbR
 ## Installation
 
 The pipeline runs under Nextflow DSL2, you can check how to install Nextflow [here](https://www.nextflow.io/docs/latest/install.html). Please notice that you need to have Java JDK (recommended version 17.0.3) available to be able to install Nextflow. 
