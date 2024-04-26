@@ -6,6 +6,7 @@ Created on Thu Mar 21 18:38:18 2024
 @author: yepesgar
 """
 import pandas as pd
+from html.parser import HTMLParser
 
 def labels_gunc():
     labels = ['n_genes_called',
@@ -154,3 +155,59 @@ def extract_genus(pd_series, tax_level):
     df = df.replace('','Unclassified')
     df = df.fillna('Unclassified')
     return pd.Series(df[tax_level])
+
+def patch_file(file_path: str, content: bytes, extra: dict = None) -> bytes:
+    if file_path == 'bigmag.html':
+        index_html_content = content.decode('utf8')
+        extra_jsons = f'''
+        var patched_jsons_content={{
+        {','.join(["'/" + k + "':" + v.decode("utf8") + "" for k, v in extra.items()])}
+        }};
+        '''
+        patched_content = index_html_content.replace(
+            '<footer>',
+            f'''
+            <footer>
+            <script>
+            ''' + extra_jsons + '''
+            const origFetch = window.fetch;
+            window.fetch = function () {
+                const e = arguments[0]
+                if (patched_jsons_content.hasOwnProperty(e)) {
+                    return Promise.resolve({
+                        json: () => Promise.resolve(patched_jsons_content[e]),
+                        headers: new Headers({'content-type': 'application/json'}),
+                        status: 200,
+                    });
+                } else {
+                    return origFetch.apply(this, arguments)
+                }
+            }
+            </script>
+            '''
+        ).replace(
+            'href="/',
+            'href="'
+        ).replace(
+            'src="/',
+            'src="'
+        )
+        return patched_content.encode('utf8')
+    else:
+        return content
+
+
+class ExternalResourceParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.resources = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'link':
+            for k, v in attrs:
+                if k == 'href':
+                    self.resources.append(v)
+        if tag == 'script':
+            for k, v in attrs:
+                if k == 'src':
+                    self.resources.append(v)
