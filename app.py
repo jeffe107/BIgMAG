@@ -201,72 +201,60 @@ app.layout = html.Div([
                 ),
             
             dbc.Col(
-                children=[  
-                    html.Div(
-                        children=[
-                            html.Div(
-                                children=[
-                                    html.P(children="BUSCO",
-                                           className="slider-title")
-                                    ]
-                                ),
-                            html.Div(
-                                children=[
+                dbc.Row([
+                        dbc.Col(
+                            children=[
+                                html.Div(
+                                    children=[
                                     html.Div(
-                                        children=dcc.Graph(
-                                            id="busco",
-                                            config={"displayModeBar": True},
+                                        children=[
+                                            html.P(children="BUSCO",
+                                                   className="slider-title")
+                                            ]
                                         ),
-                                        className="card",
+                                    html.Div(
+                                        children=[
+                                            html.Div(
+                                                dbc.Row([
+                                                    dbc.Col(
+                                                        children=[
+                                                            daq.Slider(
+                                                                vertical=True,
+                                                                id='busco-slider',
+                                                                min=0,
+                                                                max=100,
+                                                                step=10,
+                                                                value=10,
+                                                                marks={1:{'label':'0%', 'style':{'font-size':'16px'}},
+                                                                       100:{'label':'100%', 'style':{'font-size':'16px'}}},
+                                                                size=350,
+                                                                handleLabel={"showCurrentValue": True,"label": "Value"},
+                                                                labelPosition='top'
+                                                                )
+                                                            ],
+                                                        width={"size":1, 'offset':1}, align='center'),
+                                                    dbc.Col(
+                                                        children=[
+                                                        dcc.Graph(
+                                                            id="busco",
+                                                            config={"displayModeBar": True},
+                                                            style={'overflowY': 'auto', 'height': '570px'}
+                                                                )
+                                                        ],
+                                                        width=10
+                                                        )
+                                                    ])
+                                                )
+                                                ],
+                                            className="card", style={'width': '100%', 'display': 'flex'}
+                                            )
+                                        ],
+                                        className="wrapper", style={'height': '683px', 'padding-left': '0px'}
                                     )
-                                ],
-                                className="wrapper",
-                            ),
-                            html.Div([
-                                    html.Div(
-                                        children=[
-                                            html.Div(
-                                                children=[
-                                                    html.Div(children="Filter by fragmented SCO:", className="menu-title"),
-                                                    dcc.RangeSlider(
-                                                        id='fragmented-slider',
-                                                        min=0, max=100, step=10,
-                                                        marks={0:{'label':'0', 'style':{'font-size':'18px'}},
-                                                               25:{'label':'25', 'style':{'font-size':'18px'}},
-                                                               50:{'label':'50', 'style':{'font-size':'18px'}},
-                                                               75:{'label':'75', 'style':{'font-size':'18px'}},
-                                                               100: {'label':'100', 'style':{'font-size':'18px'}}},
-                                                        value=[0,100]
-                                                        ),
-                                                ]
-                                            )],
-                                        className="menu", style={'width': '35%', 'display': 'inline-block',
-                                                                 'max-width': '600px', 'margin-left': '128px'}
-                                        ),
-                                    html.Div(
-                                        children=[
-                                            html.Div(
-                                                children=[
-                                                    html.Div(children="Filter by missing SCO:", className="menu-title"),
-                                                    dcc.RangeSlider(
-                                                        id='missing-slider',
-                                                        min=0, max=100, step=10,
-                                                        marks={0:{'label':'0', 'style':{'font-size':'18px'}},
-                                                               25:{'label':'25', 'style':{'font-size':'18px'}},
-                                                               50:{'label':'50', 'style':{'font-size':'18px'}},
-                                                               75:{'label':'75', 'style':{'font-size':'18px'}},
-                                                               100: {'label':'100', 'style':{'font-size':'18px'}}},
-                                                        value=[0,100]
-                                                        ),
-                                                ]
-                                            )],
-                                        className="menu", style={'width': '35%', 'float': 'right', 'display': 'inline-block',
-                                                                 'max-width': '600px', 'margin-right': '128px'}
-                                        )
-                                ]),
-                        ], className="card")],
-                width=6
-                )
+                                ], width=12, className="card", style={'width':'100%', 'margin-left': '13px'}),
+                        ]
+                        )
+                ),
             ]),
         dbc.Row([
                 dbc.Col(
@@ -370,62 +358,40 @@ app.layout = html.Div([
 
 @callback(
     Output("busco", "figure"),
-    Input("fragmented-slider", "value"),
-    Input("missing-slider", "value")
-    )
-def update_figure_busco(frag_slider,miss_slider):
-    data_df = read_data()
-    low_frag, high_frag = frag_slider
-    low_miss, high_miss = miss_slider
-    mask = (data_df["Fragmented"] >= low_frag) & (data_df["Fragmented"] <= high_frag) & (data_df["Missing"] >= low_miss) & (data_df["Missing"] <= high_miss)
-    fig = px.scatter(
-                    data_df[mask],
-                    x = "Duplicated",
-                    y = "Complete",
-                    color = "sample",
-                    hover_data=['Bin'],
-                    template="simple_white",
-                    opacity=0.7
-        )
-    fig.update_traces(marker=dict(size=20))
-    fig.update_layout(font=dict(size=18),
-                      xaxis_title="Duplicated SCO (%)",
-                      yaxis_title="Complete SCO (%)",
-                      legend_title="Sample/Pipeline:",
-                      hoverlabel=dict(font_size=20)
-                      )
-    return fig
-
-@callback(
-    Output("CheckM2", "figure"),
-    Input("CheckM2-slider", "value"),
+    Input("busco-slider", "value"),
     Input("GTDB-TK2-selection", "value")
     )
-def update_figure_checkm2(checkm2_param, tax_level):
+def update_figure_busco(busco_param, tax_level):
     data_df = read_data()
 
     if "classification" in data_df.columns:
         tax_info = extract_genus(data_df['classification'], tax_level)
         data_df[tax_level] = tax_info
+    else:
+        data_df[tax_level] = [None] * len(data_df)
 
     data_df['Genome_Size'] = data_df['Genome_Size']/1000000
     data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
-    data_df = data_df.loc[data_df['Completeness'] >= checkm2_param]
+    data_df = data_df.loc[data_df['Complete'] >= busco_param]
+    data_df = data_df.rename(columns={"Fragmented": "Fragmented SCO"})
+    data_df = data_df.rename(columns={"Missing": "Missing SCO"})
+
     fig1 = px.scatter(
                     data_df,
-                    x = "Contamination",
-                    y = "Completeness",
+                    x = "Duplicated",
+                    y = "Complete",
                     color = "sample",
                     size = "Genome size (Mbp)",
-                    hover_data=['Bin', tax_level],
+                    hover_data=['Bin', "Fragmented SCO", "Missing SCO", tax_level],
                     template="simple_white"
         )
     
     df_l = data_df.sort_values("Genome size (Mbp)")
     min_size = data_df['Genome size (Mbp)'].min()
     max_size = data_df['Genome size (Mbp)'].max()
-    sizes_legend = np.linspace(min_size, max_size, 5, dtype=int)
-    
+    sizes_legend = np.linspace(min_size, max_size, 5)
+    sizes_legend = np.round(sizes_legend, 2)
+
     fig2 = px.scatter(
         df_l,
         x=np.zeros(len(data_df)),
@@ -445,7 +411,77 @@ def update_figure_checkm2(checkm2_param, tax_level):
         showlegend=True,
     )
     
-    fig.update_layout(legend={'x':1.1,'y':0.5})
+    fig.update_layout(legend={'x':1.12,'y':0.5})
+    fig.add_annotation(x=1.25, y=1.07,
+                       xref='paper',
+                       yref='paper',
+                text="Genome size (Mbp)",
+                showarrow=False)
+    
+    fig.update_layout(font=dict(size=18),
+                          xaxis_title="Duplicated SCO (%)",
+                          yaxis_title="Complete SCO (%)",
+                          legend_title="Sample/Pipeline:",
+                          hoverlabel=dict(font_size=20)
+                          )
+    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
+                         type="linear")
+                          )
+    return fig
+
+@callback(
+    Output("CheckM2", "figure"),
+    Input("CheckM2-slider", "value"),
+    Input("GTDB-TK2-selection", "value")
+    )
+def update_figure_checkm2(checkm2_param, tax_level):
+    data_df = read_data()
+
+    if "classification" in data_df.columns:
+        tax_info = extract_genus(data_df['classification'], tax_level)
+        data_df[tax_level] = tax_info
+    else:
+        data_df[tax_level] = [None] * len(data_df)
+
+    data_df['Genome_Size'] = data_df['Genome_Size']/1000000
+    data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
+    data_df = data_df.loc[data_df['Completeness'] >= checkm2_param]
+    fig1 = px.scatter(
+                    data_df,
+                    x = "Contamination",
+                    y = "Completeness",
+                    color = "sample",
+                    size = "Genome size (Mbp)",
+                    hover_data=['Bin', tax_level],
+                    template="simple_white"
+        )
+    
+    df_l = data_df.sort_values("Genome size (Mbp)")
+    min_size = data_df['Genome size (Mbp)'].min()
+    max_size = data_df['Genome size (Mbp)'].max()
+    sizes_legend = np.linspace(min_size, max_size, 5)
+    sizes_legend = np.round(sizes_legend, 2)
+
+    fig2 = px.scatter(
+        df_l,
+        x=np.zeros(len(data_df)),
+        y=pd.qcut(df_l["Genome size (Mbp)"], q=5, precision=0, labels=sizes_legend).astype(str),
+        size="Genome size (Mbp)", color_discrete_sequence=['black']
+    )
+    
+    fig = go.Figure(
+        data=[t for t in fig1.data] + [t.update(xaxis="x2", yaxis="y2") for t in fig2.data],
+        layout=fig1.layout
+    )
+    
+    fig.update_layout(
+        xaxis_domain=[0, 0.92],
+        xaxis2={"domain": [0.92, 1], "matches": None, "visible": False},
+        yaxis2={"anchor": "free", "overlaying": "y", "side": "right", "position": 1},
+        showlegend=True,
+    )
+    
+    fig.update_layout(legend={'x':1.12,'y':0.5})
     fig.add_annotation(x=1.25, y=1.07,
                        xref='paper',
                        yref='paper',
@@ -713,8 +749,7 @@ def update_figure_heatmap(tax_level):
             cluster='row',
             color_map= [
                         [0.0, 'white'],
-                        [0.5, '#22ae63'],
-                        [1.0, 'black']
+                        [1.0, '#22ae63']
             ],
             line_width=2,
             color_threshold={'row': 1.5,},
