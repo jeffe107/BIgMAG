@@ -182,20 +182,20 @@ Furthermore, you can download any plot from the dashboard by just clicking on th
 In the case of the CheckM2 plot, if you run the pipeline including GTDB-Tk2, when you hover on the graph space you will see the taxonomical classification of each bin/MAG.
 
 #### Store as HTML file
-BIgMAG also accounts with the possibility to be store a HTML to be displayed with any browser with the need to have any of the Python components installed. However, given that this is not a native feature of Dash, the callbacks can not be used during the process of storing the dashboard. As a consequence, there is an additional script name `app_lite.py` that will displayed the same layout as `app.py`, albeit with an additional `Save to html` button and without the components that trigger the callbacks. To use this script, you can run as follows:
+BIgMAG also accounts with the possibility to be store a HTML to be displayed with any browser with the need to have any of the Python components installed. However, given that this is not a native feature of Dash, the callbacks can not be used during the process of storing the dashboard. As a consequence, there is an additional script name `app_lite.py` that will displayed the same layout as `app.py`, albeit with an additional `Save to html` button below the heading section and without the components that trigger the callbacks. To use this script, you can run as follows:
 
 ```bash
  BIgMAG/app_lite.py output/final_df.tsv -o /path/to/store/the/html/file
 ```
 As mentioned before, this dashboard lacks of the callbacks, and hence the values for some parameters can be controlled by different flags. These are available options to customize this layout:
 ```
-  -p PORT, --port PORT  Port to run the app. (default: 8050)
-  --cl_checkm2 <N> Genome completeness level for CheckM2 (default: 10)
-  --csco_busco <N> Genome completeness of SCO for BUSCO (default: 10)
-  --param_gunc <String> Parameter to show the data distribution for GUNC (default: clade_separation_score)
-  --param_quast <String> Parameter to show the data distribution for QUAST (default: GC (%))
-  --samples_gtdbtk2 <N> Number of samples to display on the GTDB-Tk2 plot (default: None)
-  --tax_level <String> Taxonomic level to display information on GTDB-Tk2 plot (default: Phylum)
+  -p PORT, --port PORT "Port to run the app. (default: 8050)"
+  --cl_checkm2 <N> "Genome completeness level for CheckM2 (default: 10)"
+  --csco_busco <N> "Genome completeness of SCO for BUSCO (default: 10)"
+  --param_gunc <String> "Parameter to show the data distribution for GUNC (default: clade_separation_score)"
+  --param_quast <String> "Parameter to show the data distribution for QUAST (default: GC (%))"
+  --samples_gtdbtk2 <N> "Number of samples to display on the GTDB-Tk2 plot (default: None)"
+  --tax_level <String> "Taxonomic level to display information on GTDB-Tk2 plot (default: Phylum)"
 ```
 
 ## Acknowledgments
