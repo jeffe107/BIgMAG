@@ -143,7 +143,7 @@ Please notice that you will need to provide a *csv* file indicating the sample/p
 > [!WARNING]
 > It is not necessary to account with output files for all of the tools BIgMAG displays the results. Nonetheless, if you provide, for example, CheckM2 output files, these must be present for all of the specified samples, otherwise the dashboard will fail to render the plots properly.
 
-In addition, the `skip_pipeline.py` uses the following conventions column names to search for the names of the bins in each file. Please make sure that your output files from the quality tools have the following names in the column of the bins (upper and lowercase apply):
+In addition, the `skip_pipeline.py` uses the following convention column names to search for the names of the bins in each file. Please make sure that your output files from the quality tools have the following names in the column of the bins (upper and lowercase apply):
 ```
 BUSCO files     → 'Input_file'
 CheckM2 files   → 'Name'
