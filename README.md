@@ -179,7 +179,7 @@ On the other hand, according to your screen and resolution the layout may be dis
 
 Furthermore, you can download any plot from the dashboard by just clicking on the 📷 small icon in the upper right corner of each plot.
 
-In the case of the CheckM2 plot, if you run the pipeline including GTDB-Tk2, when you hover on the graph space you will see the taxonomical classification of each bin/MAG.
+In the case of the CheckM2 and BUSCO plots, if you run the pipeline including GTDB-Tk2, when you hover on the graph space you will see the taxonomical classification of each bin/MAG.
 
 #### Store as HTML file
 BIgMAG also accounts with the possibility to be store a HTML to be displayed with any browser with the need to have any of the Python components installed. However, given that this is not a native feature of Dash, the callbacks can not be used during the process of storing the dashboard. As a consequence, there is an additional script name `app_lite.py` that will displayed the same layout as `app.py`, albeit with an additional `Save to html` button below the heading section and without the components that trigger the callbacks. To use this script, you can run as follows:
