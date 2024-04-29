@@ -22,7 +22,7 @@ parser.add_argument("--cl_checkm2", help="Genome completeness level for CheckM2"
 parser.add_argument("--csco_busco", help="Genome completeness of SCO for BUSCO", default=10, type=int)
 parser.add_argument("--param_gunc", help="Parameter to show the data distribution for GUNC", default='clade_separation_score', type=str)
 parser.add_argument("--param_quast", help="Parameter to show the data distribution for QUAST", default="GC (%)", type=str)
-parser.add_argument("--samples_gtdbtk2", help="Genome completeness of SCO for BUSCO", type=int)
+parser.add_argument("--samples_gtdbtk2", help="Number of samples to display on the GTDB-Tk2 plot", type=int)
 parser.add_argument("--tax_level", help="Taxonomic level to display information on GTDB-Tk2 plot", default="Phylum", type=str)
 parser.add_argument("-o","--outdir", help="Directory to store the html file", type=str)
 
