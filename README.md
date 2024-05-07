@@ -38,7 +38,7 @@ As depicted on our demo video, the layout is composed by 6 plots, being 5 of the
 ### Practical tips
 Even though BIgMAG is able to handle as many samples as you wish, for visualization purposes it is recommended to have maximum between 15 and 20 samples per run (we run out of colors). In addition, the names of the samples should be quite short (between 5 and 10 characters) for them no to occupy all of the space in each plot.
 
-On the other hand, according to your screen and resolution the layout may be disorganized during the rendering process, you can adjust this by just reloading the page and zooming-in/out to readjust the plots. The correct display of the layout was tested on Chrome v124.0.6367.62 and Firefox v124.0.2.
+On the other hand, according to your screen and resolution the layout may be disorganized during the rendering process, you can adjust this by just reloading the page and zooming-in/out to readjust the plots. For example, on a 13-inch screen (MacBook Pro), zooming out to a value of 67% provides the best and aesthetic layout for BIgMAG using Chrome v124.0.6367.62 or Firefox v124.0.2.
 
 Furthermore, you can download any plot from the dashboard by just clicking on the 📷 small icon in the upper right corner of each plot.
 
