@@ -311,7 +311,7 @@ app.layout = html.Div([
                                                     {"label": label_GTDB_Tk2, "value": label_GTDB_Tk2}
                                                     for label_GTDB_Tk2 in labels_GTDB_Tk2
                                                 ],
-                                                value="Species",
+                                                value="Genus",
                                                 clearable=False,
                                                 className="dropdown",
                                                 style={'width':'500px'}
