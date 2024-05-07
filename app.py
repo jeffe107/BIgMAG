@@ -411,7 +411,7 @@ def update_figure_busco(busco_param, tax_level):
         showlegend=True,
     )
     
-    fig.update_layout(legend={'x':1.12,'y':0.5})
+    fig.update_layout(legend={'x':1.17,'y':0.5})
     fig.add_annotation(x=1.25, y=1.07,
                        xref='paper',
                        yref='paper',
@@ -481,7 +481,7 @@ def update_figure_checkm2(checkm2_param, tax_level):
         showlegend=True,
     )
     
-    fig.update_layout(legend={'x':1.12,'y':0.5})
+    fig.update_layout(legend={'x':1.17,'y':0.5})
     fig.add_annotation(x=1.25, y=1.07,
                        xref='paper',
                        yref='paper',
