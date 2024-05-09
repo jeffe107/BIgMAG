@@ -691,7 +691,7 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
         
         highlight_label = 'Unclassified'
         color_unclassified = 'red'
-        color_all = 'black'
+        color_all = 'dark blue'
         text_colors = [f"<span style='color:{str(color_unclassified)}'> {str(highlight_label)} </span>" if label == highlight_label else f"<span style='color:{str(color_all)}'> {str(label)} </span>" for label in final_df.index]
         fig.update_layout(xaxis=dict(ticktext=text_colors, tickmode='array', tickvals=list(range(data.shape[0]))))
         
