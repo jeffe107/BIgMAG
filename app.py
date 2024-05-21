@@ -287,7 +287,7 @@ app.layout = html.Div([
                                                                     marks={1:{'label':'One sample', 'style':{'font-size':'20px'}},
                                                                            max_samples:{'label':'All samples', 'style':{'font-size':'20px'}}},
                                                                     tooltip={"placement": "bottom", "always_visible": True,
-                                                                             "style": {"color": "black", "fontSize": "20px"}},
+                                                                             "style": {"fontSize": "20px"}},
                                                                     allowCross=False, vertical=True,
                                                                     id='GTDB-Tk2-slider')
                                                     ],
