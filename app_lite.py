@@ -81,7 +81,6 @@ def make_static(base_url, target_dir=f"{outdir}/bigmag"):
         patched_bytes = patch_file(resource_url, resource_bytes)
         write_file(resource_url, patched_bytes, target_dir)
 
-
 def figure_busco(complete_SCO):
     data_df = read_data()
 
@@ -215,7 +214,6 @@ def figure_checkm2(completeness_level):
                           )
     return fig
 
-
 def figure_gunc(gunc_parameter):
     data_df = read_data()
 
@@ -233,7 +231,6 @@ def figure_gunc(gunc_parameter):
                       )
     fig.update_layout(yaxis = dict(title_font = dict(size=15)))
     return fig
-
 
 def figure_quast(quast_parameter):
     data_df = read_data()
@@ -259,7 +256,6 @@ def figure_quast(quast_parameter):
                       )
     fig.update_layout(yaxis = dict(title_font = dict(size=15)))
     return fig
-
 
 def figure_gtdbtk2(gtdbtk_parameter, tax_level):
     data_df = read_data()
@@ -406,7 +402,6 @@ def figure_gtdbtk2(gtdbtk_parameter, tax_level):
         
         return fig
 
-
 def figure_heatmap():
     data_df = read_data()
     parameters_heatmap = params_heatmap()
@@ -467,7 +462,6 @@ def figure_heatmap():
     fig.update_xaxes(tickangle=-45,tickfont=dict(size=16))
 
     return fig
-
 
 app.layout = html.Div([
         html.Div(
@@ -717,7 +711,6 @@ app.layout = html.Div([
             ]),
         ])
         
-
 @app.callback(
     Output('save', 'children'),
     Input('save', 'n_clicks'),
