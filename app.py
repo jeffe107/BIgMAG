@@ -399,9 +399,6 @@ app.layout = html.Div([
                 )
             ]),
         ])
-        
-
-    
 
 @callback(
     Output("busco", "figure"),
