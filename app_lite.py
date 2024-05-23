@@ -731,4 +731,4 @@ def save_result(n_clicks):
         return 'Saved, check your specified directory'
 
 if __name__ == '__main__':
-    app.run(port=port, debug=True)
+    app.run(port=port)
