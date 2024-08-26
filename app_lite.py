@@ -699,7 +699,7 @@ app.layout = html.Div([
                                 'margin-right': 'auto'}
                 ),
                 html.P(
-                    ["Please cite us:", 
+                    ["Documentation:", 
                      html.A(" 🔗 Yepes-García J and Falquet L. (2024)", href="https://f1000research.com/articles/13-640", target="_blank", className="custom-link")
                     ], className="header-citation"
                     
