@@ -48,6 +48,16 @@ def labels_quast():
         ]
     return labels
 
+def labels_summary():
+    labels = [  "N_annotated_bins",
+                "N_unique_annotated_bins",
+                "N_mid_quality_MAGs",
+                "N_high_quality_MAGs",
+                "N_bins_passing_GUNC",
+                "N_bins"    
+                ]
+    return labels
+
 def params_heatmap():
     parameters = ['Completeness',
                           'Contamination',

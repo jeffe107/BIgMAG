@@ -6,7 +6,7 @@ body {
 
 .header {
     background-color: #222222;
-    height: 250px;
+    height: 300px;
     padding: 16px 0 0 0;
 }
 
@@ -29,6 +29,18 @@ body {
     margin: 4px auto;
     text-align: center;
     font-size: 32px;
+}
+
+.header-citation {
+    color: #000000;
+    margin: 4px auto;
+    text-align: center;
+    font-size: 18px;
+}
+
+.custom-link {
+    color: #FFFFFF; 
+    text-decoration: none; 
 }
 
 .wrapper {

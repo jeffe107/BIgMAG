@@ -10,8 +10,13 @@ import numpy as np
 import plotly.graph_objects as go
 import dash_daq as daq
 import argparse
-from BIgMAG_functions import labels_quast, labels_gunc, params_heatmap, params_to_normalize, names_heatmap, labels_GTDB_Tk2, extract_genus
+from BIgMAG_functions import labels_quast, labels_gunc, params_heatmap, params_to_normalize, names_heatmap, labels_GTDB_Tk2, extract_genus, labels_summary
+from scipy.stats import kruskal
+import scikit_posthocs as sp
+import pingouin as pg
 
+
+labels_summary = labels_summary()
 labels_quast = labels_quast()
 labels_gunc = labels_gunc()
 labels_GTDB_Tk2 = labels_GTDB_Tk2()
@@ -49,10 +54,60 @@ app.layout = html.Div([
                     ),
                     className="header-description",
                 ),
+                html.P(
+                    ["Please cite us:", 
+                     html.A(" 🔗 Yepes-García J and Falquet L. (2024)", href="https://f1000research.com/articles/13-640", target="_blank", className="custom-link")
+                    ], className="header-citation"
+                    
+                )
             
             ],
             className="header", style={'backgroundColor': '#22ae63'}
         ),
+        dbc.Row([
+                dbc.Col(
+                    children=[
+                        html.Div(
+                            children=[
+                            html.Div(
+                                children=[
+                                    html.P(children="Summary",
+                                           className="slider-title")
+                                    ]
+                                ),
+                            html.Div(
+                                children=[
+                                    html.Div(
+                                        dbc.Row([
+                                            dbc.Col(
+                                                children=[
+                                                dcc.Graph(
+                                                    id="barplot-summary",
+                                                    config={"displayModeBar": True},
+                                                    style={'overflowY': 'auto', 'height': '800px', 'width': '960px'}
+                                                        )
+                                                ],
+                                                width=6
+                                                ),
+                                            dbc.Col(
+                                                children=[
+                                                    dcc.Graph(
+                                                        id="heatmap-Dunn",
+                                                        config={"displayModeBar": True},
+                                                        style={'overflowY': 'auto', 'height': '800px', 'width': '960px'}
+                                                    ),
+                                                    ],
+                                                width=6)
+                                            ])
+                                        )
+                                        ],
+                                    className="card", style={'width': '100%', 'height': '800px', 'display': 'flex'}
+                                    )
+                                ],
+                                className="wrapper"
+                            ),  
+                        ], width=12, className="card"),
+                ]),
         dbc.Row([
             dbc.Col(
                 children=[
@@ -114,6 +169,7 @@ app.layout = html.Div([
                                     html.Div(
                                         children=[
                                             html.Div(
+                                                children=[
                                                 dbc.Row([
                                                     dbc.Col(
                                                         children=[
@@ -142,11 +198,48 @@ app.layout = html.Div([
                                                         ],
                                                         width=10
                                                         )
-                                                    ])
+                                                    ]),
+                                                    html.Div(
+                                                        children=[
+                                                    dbc.Row([
+                                                        dbc.Col(
+                                                            children=[
+                                                                daq.Slider(
+                                                                vertical=False,
+                                                                id='CheckM2-contamination',
+                                                                min=0,
+                                                                max=100,
+                                                                step=5,
+                                                                value=10,
+                                                                marks={1:{'label':'0%', 'style':{'font-size':'16px'}},
+                                                                       100:{'label':'100%', 'style':{'font-size':'16px'}}},
+                                                                size=350,
+                                                                handleLabel={"showCurrentValue": True,"label": "Value"},
+                                                                labelPosition='bottom'
+                                                                )
+                                                            ],
+                                                            width={"size":12, 'offset':4}, align='center'
+                                                        )
+  
+                                                    ],
+                                                )
+
+                                                ],
+                                                        style={'position': 'absolute',
+                                                                'top': '520px',    # Adjust this to move up/down
+                                                                'left': '220px',   # Adjust this to move left/right
+                                                                'width': '100px',  # Set a fixed width if needed
+                                                                'z-index': '10',  # Ensure it stays on top
+                                                                }
+                                                    )
+
+                                                ]
                                                 )
                                                 ],
                                             className="card", style={'width': '100%', 'display': 'flex'}
-                                            )
+                                            ),
+
+
                                         ],
                                         className="wrapper", style={'height': '683px', 'padding-left': '0px'}
                                     )
@@ -218,6 +311,7 @@ app.layout = html.Div([
                                     html.Div(
                                         children=[
                                             html.Div(
+                                                children=[
                                                 dbc.Row([
                                                     dbc.Col(
                                                         children=[
@@ -246,7 +340,44 @@ app.layout = html.Div([
                                                         ],
                                                         width=10
                                                         )
-                                                    ])
+                                                    ]),
+                                                    html.Div(
+                                                        children=[
+                                                    dbc.Row([
+                                                        dbc.Col(
+                                                            children=[
+                                                                daq.Slider(
+                                                                vertical=False,
+                                                                id='BUSCO-duplicated',
+                                                                min=0,
+                                                                max=100,
+                                                                step=5,
+                                                                value=10,
+                                                                marks={1:{'label':'0%', 'style':{'font-size':'16px'}},
+                                                                       100:{'label':'100%', 'style':{'font-size':'16px'}}},
+                                                                size=350,
+                                                                handleLabel={"showCurrentValue": True,"label": "Value"},
+                                                                labelPosition='bottom'
+                                                                )
+                                                            ],
+                                                            width={"size":12, 'offset':4}, align='center'
+                                                        )
+  
+                                                    ],
+                                                )
+
+                                                ],
+                                                        style={'position': 'absolute',
+                                                                'top': '520px',    # Adjust this to move up/down
+                                                                'left': '220px',   # Adjust this to move left/right
+                                                                'width': '100px',  # Set a fixed width if needed
+                                                                'z-index': '10',  # Ensure it stays on top
+                                                                }
+                                                    )
+
+
+                                                ]
+
                                                 )
                                                 ],
                                             className="card", style={'width': '100%', 'display': 'flex'}
@@ -332,7 +463,7 @@ app.layout = html.Div([
                             children=[
                             html.Div(
                                 children=[
-                                    html.P(children="Metrics at a glance:",
+                                    html.P(children="Clustering of samples/pipelines",
                                            className="slider-title")
                                     ]
                                 ),
@@ -403,20 +534,21 @@ app.layout = html.Div([
 @callback(
     Output("busco", "figure"),
     Input("busco-slider", "value"),
-    Input("GTDB-TK2-selection", "value")
+    Input("GTDB-TK2-selection", "value"),
+    Input("BUSCO-duplicated", "value")
     )
-def update_figure_busco(busco_param, tax_level):
+def update_figure_busco(busco_param, tax_level, param_duplicated):
     data_df = read_data()
 
     if "classification" in data_df.columns:
         tax_info = extract_genus(data_df['classification'], tax_level)
         data_df[tax_level] = tax_info
     else:
-        data_df[tax_level] = [None] * len(data_df)
+        data_df[tax_level] = ['Not found'] * len(data_df)
 
     data_df['Genome_Size'] = data_df['Genome_Size']/1000000
     data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
-    data_df = data_df.loc[data_df['Complete'] >= busco_param]
+    data_df = data_df.loc[(data_df['Complete'] >= busco_param) & (data_df['Duplicated'] <= param_duplicated)]
     data_df = data_df.rename(columns={"Fragmented": "Fragmented SCO"})
     data_df = data_df.rename(columns={"Missing": "Missing SCO"})
 
@@ -468,28 +600,31 @@ def update_figure_busco(busco_param, tax_level):
                           legend_title="Sample/Pipeline:",
                           hoverlabel=dict(font_size=20)
                           )
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
-                         type="linear")
-                          )
+    fig.update_layout(
+        xaxis_title_standoff=0,  # Adjust this value for more space
+        margin=dict(l=40, r=40, t=70, b=150)  # Adjust bottom margin
+    )
+
     return fig
 
 @callback(
     Output("CheckM2", "figure"),
     Input("CheckM2-slider", "value"),
-    Input("GTDB-TK2-selection", "value")
+    Input("GTDB-TK2-selection", "value"),
+    Input("CheckM2-contamination", "value")
     )
-def update_figure_checkm2(checkm2_param, tax_level):
+def update_figure_checkm2(checkm2_param, tax_level, contam_param):
     data_df = read_data()
 
     if "classification" in data_df.columns:
         tax_info = extract_genus(data_df['classification'], tax_level)
         data_df[tax_level] = tax_info
     else:
-        data_df[tax_level] = [None] * len(data_df)
+        data_df[tax_level] = ['Not found'] * len(data_df)
 
     data_df['Genome_Size'] = data_df['Genome_Size']/1000000
     data_df = data_df.rename(columns={"Genome_Size": "Genome size (Mbp)"})
-    data_df = data_df.loc[data_df['Completeness'] >= checkm2_param]
+    data_df = data_df.loc[(data_df['Completeness'] >= checkm2_param) & (data_df['Contamination'] <= contam_param)]
     fig1 = px.scatter(
                     data_df,
                     x = "Contamination",
@@ -538,9 +673,10 @@ def update_figure_checkm2(checkm2_param, tax_level):
                           legend_title="Sample/Pipeline:",
                           hoverlabel=dict(font_size=20)
                           )
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
-                         type="linear")
-                          )
+    fig.update_layout(
+        xaxis_title_standoff=0,  # Adjust this value for more space
+        margin=dict(l=40, r=40, t=70, b=150)  # Adjust bottom margin
+    )
     return fig
 
 @callback(
@@ -552,7 +688,7 @@ def update_figure_gunc(gunc_parameter):
     fig = px.box(data_df, x="sample",
                  y=gunc_parameter,
                  color="pass.GUNC",
-                 color_discrete_sequence = ['red', '#22ae63'],
+                 color_discrete_sequence = {False:'red', True: '#22ae63'},
                  template="simple_white"
                  )
     fig.update_xaxes(tickangle=-45)
@@ -573,6 +709,9 @@ def update_figure_quast(quast_parameter):
     N = len(data_df['sample'].unique())
     c = ['hsl('+str(h)+',50%'+',50%)' for h in np.linspace(0, 360, N)]
     
+    data_df_subset = data_df[['sample', quast_parameter]]
+    test = pg.welch_anova(dv=quast_parameter, between='sample', data=data_df_subset)
+
     fig = go.Figure(
                     [go.Box(
                     y=data_df.loc[data_df['sample']==sample][quast_parameter],
@@ -590,6 +729,10 @@ def update_figure_quast(quast_parameter):
                       template="simple_white"
                       )
     fig.update_layout(yaxis = dict(title_font = dict(size=15)))
+
+    fig.add_annotation(x=0.3,y=1.1, text=f"<i>p</i>-value <b>Welch ANOVA</b> test: {round(test['p-unc'][0],4)}", showarrow=False, font=dict(size=16),
+                       xref="paper", yref="paper")
+    
     return fig
 
 @app.callback(
@@ -603,10 +746,10 @@ def update_gtdb_tk2(gtdbtk_parameter, tax_level):
     
     if "classification" in data_df.columns:
         genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
-        
+
         data_df['Genus'] = genera
         data_df = data_df.reset_index(drop=True)
-        
+
         unique_genus = data_df['Genus'].unique()
         unique_genus = unique_genus[unique_genus != '']
         
@@ -806,5 +949,217 @@ def update_figure_heatmap(tax_level):
 
     return fig
 
+@app.callback(
+    Output('barplot-summary', 'figure'),
+    Input("GTDB-TK2-selection", "value")
+    )
+def update_barplot(tax_level):
+    data_df = read_data()
+    samples = data_df['sample'].unique()
+    df_4_barplot = pd.DataFrame()
+
+    for sample in samples:
+        if "classification" in data_df.columns:
+            genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
+            data_df['Genus'] = genera
+            data_df = data_df.reset_index(drop=True)
+            tax_tmp_df = data_df.loc[data_df['sample'] == sample]
+            n_annotated_bins = len(tax_tmp_df.loc[(tax_tmp_df['Genus'] != "Unclassified")])
+            if 'Unclassified' in list(tax_tmp_df['Genus']):
+                unique_annot_bins = len(tax_tmp_df['Genus'].unique()) - 1
+            else:
+                unique_annot_bins = len(tax_tmp_df['Genus'].unique())
+        else:
+            tax_tmp_df = data_df.loc[data_df['sample'] == sample]
+
+        
+        mid_quality_mags = len(tax_tmp_df.loc[(tax_tmp_df['Completeness'] >= 50) & (tax_tmp_df['Contamination'] <= 10)])
+        high_quality_mags = len(tax_tmp_df.loc[(tax_tmp_df['Completeness'] >= 90) & (tax_tmp_df['Contamination'] <= 5)])
+        bins_pass_GUNC = len(tax_tmp_df.loc[(tax_tmp_df['pass.GUNC'] == True)])
+        n_bins = len(tax_tmp_df)
+
+        if "classification" in data_df.columns:
+
+            tmp_dict_tax = {'sample': f"{sample},<br>n = {n_bins}",
+                            'N_annotated_bins': n_annotated_bins,
+                            "N_unique_annotated_bins": unique_annot_bins,
+                            'N_mid_quality_MAGs': mid_quality_mags,
+                            'N_high_quality_MAGs': high_quality_mags,
+                            'N_bins_passing_GUNC': bins_pass_GUNC,
+                            }
+        else:
+            tmp_dict_tax = {'sample': f"{sample},<br>n = {n_bins}",
+                            '# of mid-quality MAGs': mid_quality_mags,
+                            '# of high-quality MAGs': high_quality_mags,
+                            '# of bins passing GUNC': bins_pass_GUNC}
+            
+        tmp_df_annot = pd.DataFrame([tmp_dict_tax])
+        column_names = list(tmp_df_annot.columns[1:])
+        
+        for column in column_names:
+            tmp_df_annot[column] = (tmp_df_annot[column] / n_bins) * 100
+
+        df_4_barplot = pd.concat([df_4_barplot, tmp_df_annot], ignore_index = True)
+
+    fig = go.Figure()
+
+    if "classification" in data_df.columns:
+        # Define colors for each variable
+        colors = ['#e74c3c', '#f39c12', '#9b59b6', '#22ae63', '#3498db']
+        color = 'red'
+
+        legend_names = [f"% of annotated MAGs at <span style='color:{str(color)}'> {str(tax_level)} </span> level (GTDB-Tk2)",
+                '% of unique annotated MAGs (GTDB-Tk2)',
+                '% of mid-quality MAGs (CheckM2)',
+                '% of high-quality MAGs (CheckM2)',
+                '% of bins passing GUNC',
+        ]
+
+        # Add a bar trace for each variable
+        for i, column in enumerate(df_4_barplot.columns[1:]):  # Skip the 'Sample' column
+            fig.add_trace(go.Bar(
+                x=df_4_barplot['sample'],
+                y=df_4_barplot[column],
+                name=legend_names[i],
+                marker_color=colors[i]
+        ))
+
+        # Update layout for better readability
+        fig.update_layout(
+            barmode='group',
+            xaxis_title='Sample/Pipeline',
+            yaxis=dict(
+                        title='Percentage (%)',
+                        range=[0, 110],  # Ensure the y-axis extends a bit above 100
+                            ),
+            template="simple_white",
+            hoverlabel=dict(font_size=20),
+            legend=dict(title="Percentages:", yanchor = "bottom", xanchor = "left", font=dict(size=18), x=0.3, y=1.0),
+            font=dict(size=18)
+        )
+        fig.update_xaxes(tickangle=-45)
+        return fig
+    
+    else:
+        # Define colors for each variable
+        colors = ['#e74c3c', '#22ae63', '#3498db']
+
+        legend_names = [
+                '% of mid-quality MAGs (CheckM2)',
+                '% of high-quality MAGs (CheckM2)',
+                '% of bins passing GUNC'
+        ]
+
+        # Add a bar trace for each variable
+        for i, column in enumerate(df_4_barplot.columns[1:]):  # Skip the 'Sample' column
+            fig.add_trace(go.Bar(
+                x=df_4_barplot['sample'],
+                y=df_4_barplot[column],
+                name=legend_names[i],
+                marker_color=colors[i]
+        ))
+
+        # Update layout for better readability
+        fig.update_layout(
+            barmode='group',
+            xaxis_title='Sample/Pipeline',
+            yaxis=dict(
+                        title='Percentage (%)',
+                        range=[0, 110],  # Ensure the y-axis extends a bit above 100
+                            ),
+            template="simple_white",
+            hoverlabel=dict(font_size=20),
+            legend=dict(title="Percentages:", yanchor = "bottom", xanchor = "left", font=dict(size=18), x=0.3, y=1.0),
+            font=dict(size=18)
+        )
+        fig.update_xaxes(tickangle=-45)
+        return fig
+    
+@app.callback(
+    Output('heatmap-Dunn', 'figure'),
+    Input("GTDB-TK2-selection", "value")
+    )
+def update_heatmap_Dunn(tax_level):
+    data_df = read_data()
+    samples = data_df['sample'].unique()
+
+    if len(samples) > 1:
+        df_4_barplot = pd.DataFrame()
+        df_4_kruskal = pd.DataFrame()
+
+        for sample in samples:
+            if "classification" in data_df.columns:
+                genera = extract_genus(data_df['classification'], tax_level) #genus is the label for tax_level
+                data_df['Genus'] = genera
+                data_df = data_df.reset_index(drop=True)
+                tax_tmp_df = data_df.loc[data_df['sample'] == sample]
+                n_annotated_bins = len(tax_tmp_df.loc[(tax_tmp_df['Genus'] != "Unclassified")])
+                if 'Unclassified' in tax_tmp_df['Genus']:
+                    unique_annot_bins = len(tax_tmp_df['Genus'].unique()) - 1
+                else:
+                    unique_annot_bins = len(tax_tmp_df['Genus'].unique())
+            else:
+                tax_tmp_df = data_df.loc[data_df['sample'] == sample]
+
+            
+            mid_quality_mags = len(tax_tmp_df.loc[(tax_tmp_df['Completeness'] >= 50) & (tax_tmp_df['Contamination'] <= 10)])
+            high_quality_mags = len(tax_tmp_df.loc[(tax_tmp_df['Completeness'] >= 90) & (tax_tmp_df['Contamination'] <= 5)])
+            bins_pass_GUNC = len(tax_tmp_df.loc[(tax_tmp_df['pass.GUNC'] == True)])
+            n_bins = len(tax_tmp_df)
+
+            if "classification" in data_df.columns:
+                tmp_dict_tax = {'sample': sample,
+                                'N_annotated_bins': n_annotated_bins,
+                                "N_unique_annotated_bins": unique_annot_bins,
+                                'N_mid_quality_MAGs': mid_quality_mags,
+                                'N_high_quality_MAGs': high_quality_mags,
+                                'N_bins_passing_GUNC': bins_pass_GUNC,
+                                'N_bins': n_bins
+                                }
+            else:
+                tmp_dict_tax = {'sample': f"{sample}, n = {n_bins}",
+                                '# of mid-quality MAGs': mid_quality_mags,
+                                '# of high-quality MAGs': high_quality_mags,
+                                '# of bins passing GUNC': bins_pass_GUNC}
+                
+            tmp_df_annot = pd.DataFrame([tmp_dict_tax])
+            column_names = list(tmp_df_annot.columns[1:])
+            
+            df_4_kruskal = pd.concat([df_4_kruskal, tmp_df_annot], ignore_index = True)
+
+            for column in column_names:
+                tmp_df_annot[column] = (tmp_df_annot[column] / n_bins) * 100
+            
+            df_4_barplot = pd.concat([df_4_barplot, tmp_df_annot], ignore_index = True)
+
+        df_4_kruskal_long = pd.melt(df_4_kruskal, id_vars=['sample'], var_name='feature', value_name='value')
+        groups = [df_4_kruskal_long[df_4_kruskal_long['sample'] == t]['value'].values for t in df_4_kruskal_long['sample'].unique()]
+        kruskal_result = kruskal(*groups)
+        dunn_result = sp.posthoc_dunn(df_4_kruskal_long, val_col='value', group_col='sample', p_adjust='bonferroni')
+
+        fig = go.Figure()
+
+        custom_color_scale = [
+                                    [0.0, '#22ae63'],
+                                    [1.0, 'white']]
+        fig = px.imshow(dunn_result, 
+                        labels=dict(x="Sample/Pipeline", y="Sample/Pipeline", color="P-value"),
+                        x=dunn_result.columns,
+                        y=dunn_result.index,
+                        color_continuous_scale=custom_color_scale,
+                        zmin=0, zmax=1)
+
+        # Customize axis labels and title
+        fig.update_layout(
+            title=dict(text=f"<b>Kruskal-Wallis <i>p</i>-value = {kruskal_result.pvalue}</b><br><i>p</i>-value matrix of a Duncan Test",
+                    y=0.97,x=0.5,),
+            title_font=dict(size=16),
+            font=dict(size=18),
+            hoverlabel=dict(font_size=20)
+        )
+
+        return fig
+
+
 if __name__ == '__main__':
-    app.run(port=port)
+    app.run(port=port, debug=True)
