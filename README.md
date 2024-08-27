@@ -12,9 +12,7 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is a dashboard to displa
 If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
 
 
-
-https://github.com/jeffe107/BIgMAG/assets/91961180/eda82574-b168-4f13-8b3f-2b17853ae988
-
+https://github.com/user-attachments/assets/b5df846b-7fae-4636-8df9-be9be0bb3589
 
 
 Or even better, if you want to explore BIgMAG and interact directly with it, please visit this link (it is not a virus, we promise!): https://bit.ly/4aOtCbR (please be patient, we are using a free account in Render with 0.5 CPUs 😢)
