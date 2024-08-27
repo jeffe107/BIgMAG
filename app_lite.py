@@ -261,7 +261,14 @@ def figure_quast(quast_parameter):
                       )
     fig.update_layout(yaxis = dict(title_font = dict(size=15)))
 
-    fig.add_annotation(x=0.3,y=1.1, text=f"<i>p</i>-value <b>Welch ANOVA</b> test: {round(test['p-unc'][0],4)}", showarrow=False, font=dict(size=16),
+    p_value = round(test['p-unc'][0],4)
+    if p_value < 0.05:
+        color = 'red'
+        fig.add_annotation(x=0.3,y=1.1, text=f"<i>p</i>-value <b>Welch ANOVA</b> test: <span style='color:{str(color)}'> {str(p_value)} </span>", showarrow=False, font=dict(size=16),
+                       xref="paper", yref="paper")
+
+    else:
+        fig.add_annotation(x=0.3,y=1.1, text=f"<i>p</i>-value <b>Welch ANOVA</b> test: {p_value}", showarrow=False, font=dict(size=16),
                        xref="paper", yref="paper")
     
     return fig
@@ -458,7 +465,7 @@ def figure_heatmap():
             width=1920,
             cluster='row',
             color_map= [
-                        [0.0, 'white'],
+                        [0.0, '#F5F5F5'],
                         [1.0, '#22ae63']
             ],
             line_width=2,
@@ -534,7 +541,7 @@ def heatmap_Dunn():
 
         custom_color_scale = [
                                     [0.0, '#22ae63'],
-                                    [1.0, 'white']]
+                                    [1.0, '#F5F5F5']]
         fig = px.imshow(dunn_result, 
                         labels=dict(x="Sample/Pipeline", y="Sample/Pipeline", color="P-value"),
                         x=dunn_result.columns,
@@ -544,12 +551,24 @@ def heatmap_Dunn():
 
         # Customize axis labels and title
         fig.update_layout(
-            title=dict(text=f"<b>Kruskal-Wallis <i>p</i>-value = {kruskal_result.pvalue}</b><br><i>p</i>-value matrix of a Duncan Test",
-                    y=0.97,x=0.5,),
             title_font=dict(size=16),
             font=dict(size=18),
             hoverlabel=dict(font_size=20)
         )
+
+        if kruskal_result.pvalue < 0.05:
+            color = 'red'
+            p_value = round(kruskal_result.pvalue, 5)
+            fig.update_layout(
+                title=dict(text=f"<b>Kruskal-Wallis <i>p</i>-value =</b> <span style='color:{str(color)}'> {str(p_value)} </span><br><i>p</i>-value matrix of a Duncan Test",
+                    y=0.97,x=0.5,)
+            )
+        else:
+            p_value = round(kruskal_result.pvalue, 5)
+            fig.update_layout(
+                title=dict(text=f"<b>Kruskal-Wallis <i>p</i>-value =</b> {p_value}<br><i>p</i>-value matrix of a Duncan Test",
+                    y=0.97,x=0.5,)
+            )
 
         return fig
 
@@ -623,6 +642,15 @@ def summary_barplot():
                 name=legend_names[i],
                 marker_color=colors[i]
         ))
+        
+        # Add vertical lines to separate the x-axis labels
+        for i in range(1, len(samples)):
+            fig.add_shape(
+                        type="line",
+                        x0=i - 0.5, x1=i - 0.5,
+                        y0=0, y1=100,
+                        line=dict(color="#000000", width=3)
+                        )
 
         # Update layout for better readability
         fig.update_layout(
@@ -658,6 +686,15 @@ def summary_barplot():
                 name=legend_names[i],
                 marker_color=colors[i]
         ))
+            
+        # Add vertical lines to separate the x-axis labels
+        for i in range(1, len(samples)):
+            fig.add_shape(
+                        type="line",
+                        x0=i - 0.5, x1=i - 0.5,
+                        y0=0, y1=100,
+                        line=dict(color="#000000", width=3)
+                        )
 
         # Update layout for better readability
         fig.update_layout(
@@ -935,7 +972,7 @@ app.layout = html.Div([
                             children=[
                             html.Div(
                                 children=[
-                                    html.P(children="Explore your data:",
+                                    html.P(children="Explore your data",
                                            className="slider-title")
                                     ]
                                 ),
