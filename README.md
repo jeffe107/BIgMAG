@@ -15,7 +15,7 @@ If you are curious how the dashboard looks like and check its layout even before
 https://github.com/user-attachments/assets/b5df846b-7fae-4636-8df9-be9be0bb3589
 
 
-Or even better, if you want to explore BIgMAG and interact directly with it, please visit this link (it is not a virus, we promise!): https://bit.ly/4aOtCbR (please be patient, we are using a free account in Render with 0.5 CPUs 😢)
+Or even better, if you want to explore BIgMAG and interact directly with it, please visit this link (it is not a virus, we promise!): https://bigmag.online/ (please be patient, we are using a free account in Render with 0.5 CPUs 😢)
 
 ## Dashboard
 After the successful execution of the [MAGFlow](https://github.com/jeffe107/MAGFlow), you are ready to display the dashboard and start exploring your data. For this, you will need Conda, Mamba (recommended versions 23.3.1 and 1.3.1) or [pip](https://pip.pypa.io/en/stable/installation/) installed in your local system. You can create the environment or install the components with:
