@@ -48,11 +48,15 @@ Then, run it with:
 The flag `-p <N>` is included to display the dashboard in a port of your preference. Otherwise, the default value is `8050`.
 Once you run the command, the prompt output will indicate you the IP direction that you must type on your browser or copy and paste onto it, i.e., `http://127.0.0.1:8050/`
 
-### Layout
+## Integration with nf-core/mag
+
+It is possible to obtain the input file through the execution of [nf-core/mag](https://nf-co.re/mag/5.3.0). When running nf-core/mag, you need to include the parameter `--generate_bigmag_file` along with `--run_gunc` and `--run_checkm2`; the processes BINQC, GTDB-TK, QUAST nor BUSCO can’t be skipped. The ouput file will be named `bigmag_summary.tsv`, and it can be used directly to render the dashboard. Please check [here](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.) for more information.  
+
+## Layout
 
 As depicted on our demo video, the layout is composed by 8 plots labeled to which tool or process they are related to. At the bottom of the dashboard, the raw data in a format table is displayed with the possibility for the user of highlighting cells, deleting rows and filtering the columns with keywords.
 
-### Practical tips
+## Practical tips
 Even though BIgMAG is able to handle as many samples as you wish, for visualization purposes it is recommended to have maximum between 15 and 20 samples per run (we run out of colors). In addition, the names of the samples should be quite short (between 5 and 10 characters) for them no to occupy all of the space in each plot.
 
 On the other hand, according to your screen and resolution the layout may be disorganized during the rendering process, you can adjust this by just reloading the page and zooming-in/out to readjust the plots. For example, on a 13-inch screen (MacBook Pro), zooming out to a value of 67% provides the best and aesthetic layout for BIgMAG using Chrome v124.0.6367.62 or Firefox v124.0.2.
@@ -61,7 +65,7 @@ Furthermore, you can download any plot from the dashboard by just clicking on th
 
 In the case of the CheckM2 and BUSCO plots, if you run [MAGFlow](https://github.com/jeffe107/MAGFlow) including GTDB-Tk2, when you hover on the graph space you will see the taxonomical classification of each bin/MAG.
 
-#### Store as HTML file
+### Store as HTML file
 BIgMAG also accounts with the possibility to store it as an HTML to be displayed with any browser without the need to have any of the Python components installed. However, given that this is not a native feature of Dash, the callbacks cannot be used during the process of storing the dashboard. As a consequence, there is an additional script name `app_lite.py` that will displayed the same layout as `app.py`, altgough with an additional `Save to html` button below the heading section and without the components that trigger the callbacks. To use this script, you can run the following command:
 
 ```bash
