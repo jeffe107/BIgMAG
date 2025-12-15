@@ -67,6 +67,11 @@ BIgMAG also accounts with the possibility to store it as an HTML to be displayed
 ```bash
  BIgMAG/app_lite.py output/final_df.tsv -o /path/to/store/the/html/file
 ```
+Or, if the installation was with **pip**:
+```bash
+ bigmag-lite output/final_df.tsv -o /path/to/store/the/html/file
+```
+
 As mentioned before, this dashboard lacks of the callbacks, and hence the values for some parameters can be controlled by different flags. These are available options to customize this layout:
 ```
   -p PORT, --port PORT "Port to run the app. (default: 8050)"
