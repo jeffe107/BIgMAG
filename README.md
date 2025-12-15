@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/b5df846b-7fae-4636-8df9-be9be0bb3589
 Or even better, if you want to explore BIgMAG and interact directly with it, please visit this link (it is not a virus, we promise!): https://bigmag.online/ (please be patient, we are using a free account in Render with 0.5 CPUs 😢)
 
 ## Dashboard
-After the successful execution of the [MAGFlow](https://github.com/jeffe107/MAGFlow) or [nf-core/mag](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.), you are ready to display the dashboard and start exploring your data. For this, you will need Conda, Mamba (recommended versions 23.3.1 and 1.3.1) or [pip](https://pip.pypa.io/en/stable/installation/) installed in your local system. You can create the environment or install the components with:
+After the successful execution of the [MAGFlow](https://github.com/jeffe107/MAGFlow) or [nf-core/mag](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.), you are ready to display the dashboard and start exploring your data. For this, you will need Conda or Mamba (recommended versions 23.3.1 and 1.3.1) installed in your local system. You can create the environment with:
 ```bash
  <conda/mamba> create -n BIgMAG --file BIgMAG/requirements.txt
  <conda/mamba> activate BIgMAG
@@ -30,9 +30,9 @@ After you have installed the required components, you can just run:
  BIgMAG/app.py -p <N> 'path/to/the/final_df.tsv' 
 ```
 
-### PyPI
+[**PyPI**](https://pip.pypa.io/en/stable/installation/)
 
-You can install the application through PyPI:
+You can install the application with pip as well:
 
 ```bash
  pip install bigmag
@@ -41,6 +41,9 @@ Then, run it with:
 ```bash
  bigmag -p <N> 'path/to/the/final_df.tsv' 
 ```
+
+> [!WARNING]
+> Please notice the difference in the execution commands if installed with pip or through a Conda environment.
 
 The flag `-p <N>` is included to display the dashboard in a port of your preference. Otherwise, the default value is `8050`.
 Once you run the command, the prompt output will indicate you the IP direction that you must type on your browser or copy and paste onto it, i.e., `http://127.0.0.1:8050/`
