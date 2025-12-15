@@ -8,7 +8,7 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is a dashboard to displa
 [![Static Badge](https://img.shields.io/badge/developed_with-_plotly-lightblue?style=flat&logo=plotly&logoColor=lightblue&labelColor=black)](https://plotly.com/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11178078.svg)](https://doi.org/10.5281/zenodo.11178078)
 [![Static Badge](https://img.shields.io/badge/nfcore%2Fmag-compatible-%2324B064?logo=nf-core)](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.)
-![Static Badge](https://img.shields.io/badge/pypi-available-%23006dad?logo=pypi)(https://pypi.org/project/bigmag/)
+[![Static Badge](https://img.shields.io/badge/pypi-available-%23006dad?logo=pypi)](https://pypi.org/project/bigmag/)
 
 ## A bite you will not resist!
 If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
