@@ -9,6 +9,7 @@ BIgMAG (Board InteGrating Metagenome-Assembled Genomes) is a dashboard to displa
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11178078.svg)](https://doi.org/10.5281/zenodo.11178078)
 [![Static Badge](https://img.shields.io/badge/nfcore%2Fmag-compatible-%2324B064?logo=nf-core)](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.)
 [![Static Badge](https://img.shields.io/badge/pypi-available-%23006dad?logo=pypi)](https://pypi.org/project/bigmag/)
+[![Static Badge](https://img.shields.io/badge/conda-available-%2343b02a?logo=anaconda)](https://anaconda.org/channels/bioconda/packages/bigmag/overview)
 
 ## A bite you will not resist!
 If you are curious how the dashboard looks like and check its layout even before starting to work with it, here there is a small bite of our BIgMAG:
@@ -22,6 +23,7 @@ Or even better, if you want to explore BIgMAG and interact directly with it, ple
 ## Dashboard
 After the successful execution of the [MAGFlow](https://github.com/jeffe107/MAGFlow) or [nf-core/mag](https://nf-co.re/mag/5.3.0/parameters/#:~:text=Make%20a%20BIgMAG%20input%20file%20including%20GUNC%20results.), you are ready to display the dashboard and start exploring your data. For this, you will need Conda or Mamba (recommended versions 23.3.1 and 1.3.1) installed in your local system. You can create the environment with:
 ```bash
+git clone https://github.com/jeffe107/BIgMAG
  <conda/mamba> create -n BIgMAG --file BIgMAG/requirements.txt
  <conda/mamba> activate BIgMAG
 ```
@@ -30,13 +32,16 @@ After you have installed the required components, you can just run:
  BIgMAG/app.py -p <N> 'path/to/the/final_df.tsv' 
 ```
 
-[**PyPI**](https://pip.pypa.io/en/stable/installation/)
-
-You can install the application with pip as well:
+Alternatively, you can install all the components directly with [**PyPI**](https://pypi.org/project/bigmag/) or from [**Bioconda**](https://anaconda.org/channels/bioconda/packages/bigmag/overview):
 
 ```bash
  pip install bigmag
 ```
+or
+```bash
+ conda install bioconda::bigmag
+```
+
 Then, run it with:
 ```bash
  bigmag -p <N> 'path/to/the/final_df.tsv' 
