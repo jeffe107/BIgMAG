@@ -48,7 +48,7 @@ Then, run it with:
 ```
 
 > [!WARNING]
-> Please notice the difference in the execution commands if installed with pip or through a Conda environment.
+> Please notice the difference in the execution commands if installed with pip, Bioconda or cloning the repository.
 
 The flag `-p <N>` is included to display the dashboard in a port of your preference. Otherwise, the default value is `8050`.
 Once you run the command, the prompt output will indicate you the IP direction that you must type on your browser or copy and paste onto it, i.e., `http://127.0.0.1:8050/`
